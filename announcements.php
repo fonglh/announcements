@@ -96,7 +96,7 @@ add_shortcode( 'announcements', 'flh_announcements_handler' );
 //shortcode handler which queries for the announcements and displays them
 function flh_announcements_handler() {
 	$output = '';
-	$output .= '<div id="announcements"><ul>';
+	$output .= '<ul id="js-news" class="js-hidden">';
 
 	//get announcement CPT of those in the future
 	//it's not enough to just get post_status=future as missed schedule posts will also show up
@@ -109,7 +109,7 @@ function flh_announcements_handler() {
 	remove_filter( 'posts_where', 'flh_announcements_filter_where' );
 
 	while ( $announce_query->have_posts() ) : $announce_query->the_post();
-		$output .= '<li>';
+		$output .= '<li class="news-item">';
 
 		//cannot use the_content() directly as that echoes immediately, so the output is in the wrong place
 		//get unfiltered content instead. have to filter and make it safe before display
@@ -124,7 +124,7 @@ function flh_announcements_handler() {
 
 	wp_reset_postdata();
 
-	$output .= '</ul></div>';
+	$output .= '</ul>';
 	return $output;
 }
 
@@ -137,7 +137,7 @@ function flh_announcements_filter_where( $where = '' ) {
 	return $where;
 }
 
-//enqueue script for news ticker
+//enqueue scripts and styles for news ticker
 add_action( 'wp_enqueue_scripts', 'flh_announcements_ticker_enqueue' );
 
 function flh_announcements_ticker_enqueue() {
@@ -145,5 +145,14 @@ function flh_announcements_ticker_enqueue() {
 			'news-ticker',
 			plugins_url( 'announcements/js/jquery.ticker.js' ),		//passing __FILE__ as the 2nd param doesn't work for symlinks
 			array( 'jquery' )
+		);
+	wp_enqueue_script(
+			'start-news-ticker',
+			plugins_url( 'announcements/js/site.js' ),
+			array( 'news-ticker' )
+		);
+	wp_enqueue_style(
+			'news-ticker-style',
+			plugins_url( 'announcements/css/ticker-style.css' )
 		);
 }
