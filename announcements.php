@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Announcements plugin
+Plugin Name: Announcements
 Plugin URI: http://example.com/wordpress-plugins/my-plugin
 Description: Provides a custom post type for easy administration of announcements. Displays announcements using a jQuery news ticker. Shortcode allows them to be easily added to page or post content
 Version: 1.0
@@ -89,4 +89,51 @@ function flh_add_announcement_cpt() {
     /* Register the announcement post type. */
     register_post_type( 'announcement', $announcement_args );
 }
+
+//use the shortcode [announcements] in page or post content to display the announcements
+add_shortcode( 'announcements', 'flh_announcements_handler' );
+
+//shortcode handler which queries for the announcements and displays them
+function flh_announcements_handler() {
+	$output = '';
+	$output .= '<div id="announcements"><ul>';
+
+	//get announcement CPT of those in the future
+	add_filter( 'posts_where', 'flh_announcements_filter_where' );
+	$announce_query = new WP_Query( array( 'post_type' => 'announcement',
+											'post_status' => 'future',  
+											'orderby' => 'date',
+											'order' => 'ASC'
+								) );
+	remove_filter( 'posts_where', 'flh_announcements_filter_where' );
+
+	while ( $announce_query->have_posts() ) : $announce_query->the_post();
+		$output .= '<li>';
+
+		//cannot use the_content() directly as that echoes immediately, so the output is in the wrong place
+		//get unfiltered content instead. have to filter and make it safe before display
+		//code from http://codex.wordpress.org/Function_Reference/the_content
+		$content = get_the_content();
+		$content = apply_filters( 'the_content', $content );
+		$content = str_replace( ']]>', ']]&gt;', $content );
+
+		$output .= $content;
+		$output .= '</li>';
+	endwhile;
+
+	wp_reset_postdata();
+
+	$output .= '</ul></div>';
+	return $output;
+}
+
+
+//filter function for WP_Query used in shortcode handler
+function flh_announcements_filter_where( $where = '' ) {
+	//future posts
+	$where .= " AND post_date >= '" . date( 'Y-m-d H:i:s' ) . "'";
+
+	return $where;
+}
+
 
