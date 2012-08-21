@@ -99,6 +99,7 @@ function flh_announcements_handler() {
 	$output .= '<div id="announcements"><ul>';
 
 	//get announcement CPT of those in the future
+	//it's not enough to just get post_status=future as missed schedule posts will also show up
 	add_filter( 'posts_where', 'flh_announcements_filter_where' );
 	$announce_query = new WP_Query( array( 'post_type' => 'announcement',
 											'post_status' => 'future',  
@@ -136,4 +137,13 @@ function flh_announcements_filter_where( $where = '' ) {
 	return $where;
 }
 
+//enqueue script for news ticker
+add_action( 'wp_enqueue_scripts', 'flh_announcements_ticker_enqueue' );
 
+function flh_announcements_ticker_enqueue() {
+	wp_enqueue_script(
+			'news-ticker',
+			plugins_url( 'announcements/js/jquery.ticker.js' ),		//passing __FILE__ as the 2nd param doesn't work for symlinks
+			array( 'jquery' )
+		);
+}
