@@ -114,9 +114,12 @@ function flh_announcements_handler() {
 		//cannot use the_content() directly as that echoes immediately, so the output is in the wrong place
 		//get unfiltered content instead. have to filter and make it safe before display
 		//code from http://codex.wordpress.org/Function_Reference/the_content
-		$content = get_the_content();
-		$content = apply_filters( 'the_content', $content );
-		$content = str_replace( ']]>', ']]&gt;', $content );
+		//$content = get_the_content();
+		//$content = apply_filters( 'the_content', $content );
+		//$content = str_replace( ']]>', ']]&gt;', $content );
+
+		//going to use my custom excerpt function instead
+		$content = flh_announcements_excerpt_max_charlength( 140 );
 
 		$output .= $content;
 		$output .= '</li>';
@@ -126,6 +129,29 @@ function flh_announcements_handler() {
 
 	$output .= '</ul>';
 	return $output;
+}
+
+// get the excerpt with a maximum of $charlength characters
+// code is adapted from http://codex.wordpress.org/Function_Reference/get_the_excerpt
+function flh_announcements_excerpt_max_charlength( $charlength ) {
+	$excerpt = get_the_excerpt();
+	$charlength++;
+
+	if( mb_strlen( $excerpt ) > $charlength ) {
+		//the -5 seems to be to make up for the [...] at the end
+		$subex = mb_substr( $excerpt, 0, $charlength - 10 );
+		$exwords = explode(' ', $subex );
+		//figure out how long the last (possibly) partial word is
+		$excut = - ( mb_strlen( $exwords[ count( $exwords ) - 1 ] ) );
+		if( $excut < 0 ) {
+			//remove the last (partial) word
+			$excerpt = mb_substr( $subex, 0, $excut );
+		}
+		else
+			$excerpt = $subex;
+		$excerpt .= '<a href="' . get_permalink() . '">&hellip; [Read All]</a>';
+	}
+	return $excerpt;
 }
 
 
