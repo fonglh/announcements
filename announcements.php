@@ -182,3 +182,64 @@ function flh_announcements_ticker_enqueue() {
 			plugins_url( 'announcements/css/ticker-style.css' )
 		);
 }
+
+//add submenu to Settings menu
+add_action( 'admin_menu', 'flh_announcements_create_menu' );
+
+//Add an entry to the Settings menu named 'Announcements'
+function flh_announcements_create_menu() {
+	add_options_page( 'Announcements Options', 'Announcements', 'manage_options', 'announcements_options', 'flh_announcements_settings_render_page' );
+}
+
+//Render the settings page
+function flh_announcements_settings_render_page() {
+	?>
+	<div class="wrap">
+		<?php screen_icon(); ?>
+		<h2>Announcements Options</h2>
+		<?php settings_errors(); ?>
+
+		<form method="post" action="options.php">
+			<?php
+				settings_fields( 'flh_announcements_options' );
+				do_settings_sections( 'announcements_options' );
+				submit_button();
+			?>
+		</form>
+	</div>
+	<?php
+;
+}
+
+add_action( 'admin_init', 'flh_announcements_options_init' );
+
+function flh_announcements_options_init() {
+	register_setting( 
+		'flh_announcements_options',
+		'flh_announcements_options',
+		'flh_announcements_validate_options'
+	);
+
+	add_settings_section(
+		'general',
+		'',
+		'__return_false',
+		'announcements_options'
+	);
+
+	add_settings_field( 'link_color', 'Link Color', 'flh_announcements_options_field_link_color', 'announcements_options', 'general' );
+}
+
+function flh_announcements_options_field_link_color() {
+	$options = get_option( 'flh_announcements_options' );
+	$options['link_color'] = '#FFFF00';
+	?>
+	<input type="text" name="flh_announcements_options" id="link-color" value="<?php echo esc_attr( $options['link_color'] ); ?>" />
+	<a href="#" class="pickcolor hide-if-no-js" id="link-color-example"></a>
+	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
+	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
+	<br />
+	<span><?php printf( __( 'Default color: %s', 'twentyeleven' ), '<span id="default-color">' . twentyeleven_get_default_link_color( $options['color_scheme'] ) . '</span>' ); ?></span>
+	<?php
+
+}
