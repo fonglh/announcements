@@ -226,7 +226,7 @@ function flh_announcements_settings_render_page() {
 	<div class="wrap">
 		<?php screen_icon(); ?>
 		<h2>Announcements Options</h2>
-		<?php settings_errors(); ?>
+		<?php //settings_errors(); ?>
 
 		<form method="post" action="options.php">
 			<?php
