@@ -217,6 +217,19 @@ function flh_announcements_settings_render_page() {
 ;
 }
 
+/* Return an array of default options
+ */
+function flh_announcements_get_default_options() {
+	$defaults = array(
+		'ticker-color' => '#21759B',
+		'text-color' => '#FFFFFF',
+		'ticker-height' => '58px'
+	);
+
+	return apply_filters( 'flh_announcements_default_options', $defaults );
+}
+
+
 add_action( 'admin_init', 'flh_announcements_options_init' );
 
 function flh_announcements_options_init() {
@@ -233,19 +246,19 @@ function flh_announcements_options_init() {
 		'announcements_options'
 	);
 
-	add_settings_field( 'link_color', 'Link Color', 'flh_announcements_options_field_link_color', 'announcements_options', 'general' );
+	add_settings_field( 'ticker_color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
 }
 
-function flh_announcements_options_field_link_color() {
-	$options = get_option( 'flh_announcements_options' );
-	$options['link_color'] = '#FFFF00';
+function flh_announcements_options_field_ticker_color() {
+	$options = get_option( 'flh_announcements_options', flh_announcements_get_default_options() );
+
 	?>
-	<input type="text" name="flh_announcements_options" id="link-color" value="<?php echo esc_attr( $options['link_color'] ); ?>" />
-	<a href="#" class="pickcolor hide-if-no-js" id="link-color-example"></a>
+	<input type="text" name="flh_announcements_options" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
+	<a href="#" class="pickcolor hide-if-no-js" id="ticker-color-example"></a>
 	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
 	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 	<br />
-	<span><?php printf( __( 'Default color: %s', 'twentyeleven' ), '<span id="default-color">' . twentyeleven_get_default_link_color( $options['color_scheme'] ) . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="default-color">' . $options['ticker-color'] . '</span>' ); ?></span>
 	<?php
 
 }
