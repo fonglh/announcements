@@ -189,8 +189,8 @@ function flh_announcements_ticker_enqueue() {
 		);
 }
 
-//enqueue js scripts and styles for options page
-add_action( 'admin_enqueue_scripts', 'flh_announcements_admin_enqueue' );
+//enqueue js scripts and styles only for my options page so it doesn't screw up other settings pages
+add_action( 'admin_print_styles-settings_page_announcements_options', 'flh_announcements_admin_enqueue' );
 
 function flh_announcements_admin_enqueue() {
 	//this changes the colour in the colour samples when the text changes
@@ -202,7 +202,7 @@ function flh_announcements_admin_enqueue() {
 
 	// this is for the colour samples
 	wp_enqueue_style(
-			'flh-announcements-options',
+			'flh-announcements-options-style',
 			plugins_url( 'announcements/css/announcements-options.css' ),	
 			false
 		);
