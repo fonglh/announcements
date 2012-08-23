@@ -285,6 +285,9 @@ function flh_announcements_validate_options( $input ) {
 	if ( isset( $input['text-color'] ) && preg_match( '/^#?([a-f0-9]{3}){1,2}$/i', $input['text-color'] ) )
 		$output['text-color'] = '#' . strtolower( ltrim( $input['text-color'], '#' ) );
 
+	if ( isset( $input['ticker-height'] ) && preg_match( '/^[0-9]+.{2}$/', $input['ticker-height'] ) )
+		$output['ticker-height'] = strtolower( $input['ticker-height'] );
+
 	return $output;
 }
 

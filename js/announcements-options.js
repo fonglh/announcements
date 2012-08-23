@@ -20,6 +20,8 @@ var farbtastic2;
 		//turn the default colour <span> below the textbox into a link
 		$('#ticker-default-color').wrapInner('<a href="#" />');
 		$('#text-default-color').wrapInner('<a href="#" />');
+		$('#default-height').wrapInner('<a href="#" />');
+
 
 		farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
 		farbtastic2 = $.farbtastic('#textColorPickerDiv', textPickColor);
@@ -79,5 +81,10 @@ var farbtastic2;
 			e.preventDefault();
 		});
 
+		//click event handler for Default height link
+		$('#default-height a').click( function(e) {
+			$('#ticker-height').val(this.innerHTML);
+			e.preventDefault();
+		});
 	});
 })(jQuery);
