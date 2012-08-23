@@ -246,7 +246,8 @@ function flh_announcements_get_default_options() {
 	$defaults = array(
 		'ticker-color' => '#21759B',
 		'text-color' => '#FFFFFF',
-		'ticker-height' => '58px'
+		'ticker-height' => '58px',
+		'max-chars' => 140
 	);
 
 	return apply_filters( 'flh_announcements_default_options', $defaults );
@@ -271,7 +272,7 @@ function flh_announcements_options_init() {
 
 	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
 	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
-	add_settings_field( 'ticker-height', 'Ticker Height', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
+	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
 }
 
 function flh_announcements_validate_options( $input ) {
@@ -285,8 +286,12 @@ function flh_announcements_validate_options( $input ) {
 	if ( isset( $input['text-color'] ) && preg_match( '/^#?([a-f0-9]{3}){1,2}$/i', $input['text-color'] ) )
 		$output['text-color'] = '#' . strtolower( ltrim( $input['text-color'], '#' ) );
 
-	if ( isset( $input['ticker-height'] ) && preg_match( '/^[0-9]+.{2}$/', $input['ticker-height'] ) )
-		$output['ticker-height'] = strtolower( $input['ticker-height'] );
+	if ( isset( $input['ticker-height'] ) ) {
+		if ( preg_match( '/^[0-9]+px$/', $input['ticker-height'] ) )	//if number followed by px
+			$output['ticker-height'] = strtolower( $input['ticker-height'] );
+		elseif ( preg_match( '/^[0-9]+$/', $input['ticker-height'] ) )	//just a number, append px to it
+			$output['ticker-height'] = $input['ticker-height'] . 'px';
+	}
 
 	return $output;
 }
