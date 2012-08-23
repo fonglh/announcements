@@ -280,8 +280,8 @@ function flh_announcements_options_field_ticker_color() {
 
 	?>
 	<input type="text" name="flh_announcements_options" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
-	<a href="#" class="pickcolor hide-if-no-js" id="ticker-color-example"></a>
-	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
+	<a href="#" class="tickerpickcolor hide-if-no-js" id="ticker-color-example"></a>
+	<input type="button" class="tickerpickcolor button hide-if-no-js" id="ticker-pick-color" value="Select a Color" />
 	<div id="tickerColorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 	<br />
 	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="ticker-default-color">' . $defaults['ticker-color'] . '</span>' ); ?></span>
@@ -295,9 +295,9 @@ function flh_announcements_options_field_text_color() {
 
 	?>
 	<input type="text" name="flh_announcements_options" id="text-color" value="<?php echo esc_attr( $options['text-color'] ); ?>" />
-	<a href="#" class="pickcolor hide-if-no-js" id="text-color-example"></a>
-	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
-	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
+	<a href="#" class="textpickcolor hide-if-no-js" id="text-color-example"></a>
+	<input type="button" class="textpickcolor button hide-if-no-js" value="Select a Color" />
+	<div id="textColorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 	<br />
 	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="text-default-color">' . $defaults['text-color'] . '</span>' ); ?></span>
 	<?php
