@@ -180,7 +180,7 @@ function flh_announcements_ticker_enqueue() {
 		);
 	wp_enqueue_script(
 			'start-news-ticker',
-			plugins_url( 'announcements/js/site.js' ),
+			plugins_url( 'announcements/js/ticker-init.js' ),
 			array( 'news-ticker' )
 		);
 	wp_enqueue_style(
@@ -188,6 +188,29 @@ function flh_announcements_ticker_enqueue() {
 			plugins_url( 'announcements/css/ticker-style.css' )
 		);
 }
+
+//enqueue js scripts and styles for options page
+add_action( 'admin_enqueue_scripts', 'flh_announcements_admin_enqueue' );
+
+function flh_announcements_admin_enqueue() {
+	//this changes the colour in the colour samples when the text changes
+	wp_enqueue_script(
+			'flh-announcements-options',
+			plugins_url( 'announcements/js/announcements-options.js' ),
+			array( 'farbtastic' )
+		);
+
+	// this is for the colour samples
+	wp_enqueue_style(
+			'flh-announcements-options',
+			plugins_url( 'announcements/css/announcements-options.css' ),	
+			false
+		);
+
+	//need this to display the colour picker
+	wp_enqueue_style( 'farbtastic' );
+}
+
 
 //add submenu to Settings menu
 add_action( 'admin_menu', 'flh_announcements_create_menu' );
@@ -259,9 +282,9 @@ function flh_announcements_options_field_ticker_color() {
 	<input type="text" name="flh_announcements_options" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
 	<a href="#" class="pickcolor hide-if-no-js" id="ticker-color-example"></a>
 	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
-	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
+	<div id="tickerColorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 	<br />
-	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="default-color">' . $defaults['ticker-color'] . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="ticker-default-color">' . $defaults['ticker-color'] . '</span>' ); ?></span>
 	<?php
 
 }
@@ -276,7 +299,7 @@ function flh_announcements_options_field_text_color() {
 	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
 	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 	<br />
-	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="default-color">' . $defaults['text-color'] . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="text-default-color">' . $defaults['text-color'] . '</span>' ); ?></span>
 	<?php
 }
 
