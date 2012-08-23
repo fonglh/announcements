@@ -246,11 +246,14 @@ function flh_announcements_options_init() {
 		'announcements_options'
 	);
 
-	add_settings_field( 'ticker_color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
+	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
+	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
+	add_settings_field( 'ticker-height', 'Ticker Height', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
 }
 
 function flh_announcements_options_field_ticker_color() {
-	$options = get_option( 'flh_announcements_options', flh_announcements_get_default_options() );
+	$defaults = flh_announcements_get_default_options();
+	$options = get_option( 'flh_announcements_options', $defaults );
 
 	?>
 	<input type="text" name="flh_announcements_options" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
@@ -258,7 +261,31 @@ function flh_announcements_options_field_ticker_color() {
 	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
 	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
 	<br />
-	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="default-color">' . $options['ticker-color'] . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="default-color">' . $defaults['ticker-color'] . '</span>' ); ?></span>
 	<?php
 
+}
+
+function flh_announcements_options_field_text_color() {
+	$defaults = flh_announcements_get_default_options();
+	$options = get_option( 'flh_announcements_options', $defaults );
+
+	?>
+	<input type="text" name="flh_announcements_options" id="text-color" value="<?php echo esc_attr( $options['text-color'] ); ?>" />
+	<a href="#" class="pickcolor hide-if-no-js" id="text-color-example"></a>
+	<input type="button" class="pickcolor button hide-if-no-js" value="Select a Color" />
+	<div id="colorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
+	<br />
+	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="default-color">' . $defaults['text-color'] . '</span>' ); ?></span>
+	<?php
+}
+
+function flh_announcements_options_field_ticker_height() {
+	$defaults = flh_announcements_get_default_options();
+	$options = get_option( 'flh_announcements_options', $defaults );
+	?>
+	<input type="text" name="flh_announcements_options" id="ticker-height" value="<?php echo esc_attr( $options['ticker-height'] ); ?>" />
+	<br />
+	<span><?php printf( __( 'Default height: %s', 'flh_announcements' ), '<span id="default-height">' . $defaults['ticker-height'] . '</span>' ); ?></span>
+	<?php
 }
