@@ -96,7 +96,6 @@ add_shortcode( 'announcements', 'flh_announcements_handler' );
 //shortcode handler which queries for the announcements and displays them
 function flh_announcements_handler() {
 	$output = '';
-	$output .= '<ul id="js-news" class="js-hidden">';
 
 	//get announcement CPT of those in the future
 	//it's not enough to just get post_status=future as missed schedule posts will also show up
@@ -107,6 +106,13 @@ function flh_announcements_handler() {
 											'order' => 'ASC'
 								) );
 	remove_filter( 'posts_where', 'flh_announcements_filter_where' );
+
+	// don't output anything if there are no posts
+	if ( $announce_query->have_posts() ) {
+		$output .= '<ul id="js-news" class="js-hidden">';
+	}
+	else
+		return $output;
 
 	while ( $announce_query->have_posts() ) : $announce_query->the_post();
 		$output .= '<li class="news-item">';
