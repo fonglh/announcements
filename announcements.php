@@ -237,6 +237,7 @@ function flh_announcements_settings_render_page() {
 				submit_button();
 			?>
 		</form>
+
 	</div>
 	<?php
 ;
@@ -309,7 +310,7 @@ function flh_announcements_validate_options( $input ) {
 function flh_announcements_options_field_ticker_color() {
 	$defaults = flh_announcements_get_default_options();
 	$options = get_option( 'flh_announcements_options', $defaults );
-
+	$options = wp_parse_args( $options, $defaults );
 	?>
 	<input type="text" name="flh_announcements_options[ticker-color]" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
 	<a href="#" class="tickerpickcolor hide-if-no-js" id="ticker-color-example"></a>
@@ -324,7 +325,7 @@ function flh_announcements_options_field_ticker_color() {
 function flh_announcements_options_field_text_color() {
 	$defaults = flh_announcements_get_default_options();
 	$options = get_option( 'flh_announcements_options', $defaults );
-
+	$options = wp_parse_args( $options, $defaults );
 	?>
 	<input type="text" name="flh_announcements_options[text-color]" id="text-color" value="<?php echo esc_attr( $options['text-color'] ); ?>" />
 	<a href="#" class="textpickcolor hide-if-no-js" id="text-color-example"></a>
@@ -338,6 +339,7 @@ function flh_announcements_options_field_text_color() {
 function flh_announcements_options_field_ticker_height() {
 	$defaults = flh_announcements_get_default_options();
 	$options = get_option( 'flh_announcements_options', $defaults );
+	$options = wp_parse_args( $options, $defaults );
 	?>
 	<input type="text" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $options['ticker-height'] ); ?>" />
 	<br />
@@ -348,6 +350,7 @@ function flh_announcements_options_field_ticker_height() {
 function flh_announcements_options_field_max_chars() {
 	$defaults = flh_announcements_get_default_options();
 	$options = get_option( 'flh_announcements_options', $defaults );
+	$options = wp_parse_args( $options, $defaults );
 	?>
 	<input type="text" name="flh_announcements_options[max-chars]" id="max-chars" value="<?php echo esc_attr( $options['max-chars'] ); ?>" />
 	<br />
