@@ -244,8 +244,8 @@ function flh_announcements_settings_render_page() {
  */
 function flh_announcements_get_default_options() {
 	$defaults = array(
-		'ticker-color' => '#21759B',
-		'text-color' => '#FFFFFF',
+		'ticker-color' => '#21759b',
+		'text-color' => '#ffffff',
 		'ticker-height' => '58px',
 		'max-chars' => 140
 	);
@@ -334,3 +334,40 @@ function flh_announcements_options_field_ticker_height() {
 	<span><?php printf( __( 'Default height: %s', 'flh_announcements' ), '<span id="default-height">' . $defaults['ticker-height'] . '</span>' ); ?></span>
 	<?php
 }
+
+// output Announcements options style settings in page header
+add_action( 'wp_head', 'flh_announcements_print_ticker_color_style' );
+
+function flh_announcements_print_ticker_color_style() {
+	$defaults = flh_announcements_get_default_options();
+	$options = get_option( 'flh_announcements_options', $defaults );
+	?>
+	<style>
+	<?php
+
+	// for simplicity, just output both colour options if either of them do not match the default
+	if ( $options['ticker-color'] !== $defaults['ticker-color'] || $options['text-color'] !== $defaults['text-color'] ) {
+		?>
+		.ticker, 
+		.ticker-wrapper.has-js,
+		.ticker-content,
+		.ticker-content a {
+			background-color: <?php echo $options['ticker-color']; ?>;
+			color: <?php echo $options['text-color']; ?>;
+		
+		}
+		<?php
+	}
+	
+	if ( $options['ticker-height'] !== $defaults['ticker-height'] ) {
+		?>
+		.ticker-wrapper.has-js {
+			height: <?php echo $options['ticker-height']; ?>;
+		}
+		<?php
+	}
+	?>
+	</style>
+	<?php
+}
+
