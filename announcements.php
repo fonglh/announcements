@@ -213,6 +213,12 @@ function flh_announcements_admin_enqueue() {
 
 	//need this to display the colour picker
 	wp_enqueue_style( 'farbtastic' );
+
+	//to display the sample ticker
+	wp_enqueue_style(
+			'news-ticker-style',
+			plugins_url( 'announcements/css/ticker-style.css' )
+		);
 }
 
 
@@ -231,6 +237,14 @@ function flh_announcements_settings_render_page() {
 		<?php screen_icon(); ?>
 		<h2>Announcements Options</h2>
 		<?php //settings_errors(); ?>
+		<div id="ticker-wrapper-sample" class="ticker-wrapper has-js left" style="width:490px">
+			<div id="ticker-sample" class="ticker">
+				<p id="ticker-content-sample" class="ticker-content" style="display: block; opacity: 1; left: 20px;">
+					Hello this is one announcement.
+				</p>
+			</div>
+		</div>
+		<br />
 
 		<form method="post" action="options.php">
 			<?php
@@ -239,8 +253,8 @@ function flh_announcements_settings_render_page() {
 				submit_button();
 			?>
 		</form>
-
-	</div>
+		
+		</div>
 	<?php
 ;
 }
