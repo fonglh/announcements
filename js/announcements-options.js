@@ -7,6 +7,9 @@ var farbtastic2;
 		farbtastic.setColor(a);
 		$('#ticker-color').val(a);
 		$('#ticker-color-example').css('background-color', a);
+		$('#ticker-wrapper-sample').css('background-color', a);
+		$('#ticker-sample').css('background-color', a);
+		$('#ticker-content-sample').css('background-color', a);
 	};
 
 	// change the colour of the sample square and change the colour picker's selected colour for text color
@@ -14,6 +17,7 @@ var farbtastic2;
 		farbtastic2.setColor(a);
 		$('#text-color').val(a);
 		$('#text-color-example').css('background-color', a);
+		$('#ticker-content-sample').css('color', a);
 	};
 
 	$(document).ready( function() {
