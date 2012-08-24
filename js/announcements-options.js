@@ -18,6 +18,7 @@ var farbtastic2;
 		$('#text-color').val(a);
 		$('#text-color-example').css('background-color', a);
 		$('#ticker-content-sample').css('color', a);
+		$('#ticker-content-sample a').css('color', a);
 	};
 
 	//change the height of the sample ticker
