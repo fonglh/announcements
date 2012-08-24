@@ -110,9 +110,7 @@ function flh_announcements_handler() {
 	// don't output anything if there are no posts
 	if ( $announce_query->have_posts() ) {
 		$output .= '<ul id="js-news" class="js-hidden">';
-		$defaults = flh_announcements_get_default_options();
-		$options = get_option( 'flh_announcements_options', $defaults );
-		$options = wp_parse_args( $options, $defaults );
+		$options = flh_announcements_get_options();
 		$max_chars = $options[ 'max-chars' ];
 	}
 	else
@@ -129,7 +127,7 @@ function flh_announcements_handler() {
 		//$content = str_replace( ']]>', ']]&gt;', $content );
 
 		//going to use my custom excerpt function instead
-		$content = flh_announcements_excerpt_max_charlength( $max_chars );
+		$content = flh_announcements_excerpt_max_charlength( get_the_excerpt(), get_permalink(), $max_chars );
 
 		$output .= $content;
 		$output .= '</li>';
@@ -143,8 +141,8 @@ function flh_announcements_handler() {
 
 // get the excerpt with a maximum of $charlength characters
 // code is adapted from http://codex.wordpress.org/Function_Reference/get_the_excerpt
-function flh_announcements_excerpt_max_charlength( $charlength ) {
-	$excerpt = get_the_excerpt();
+function flh_announcements_excerpt_max_charlength( $text, $permalink, $charlength ) {
+	$excerpt = $text;
 	$charlength++;
 
 	if( mb_strlen( $excerpt ) > $charlength ) {
@@ -159,7 +157,7 @@ function flh_announcements_excerpt_max_charlength( $charlength ) {
 		}
 		else
 			$excerpt = $subex;
-		$excerpt .= '<a href="' . get_permalink() . '">&hellip; [Read All]</a>';
+		$excerpt .= '<a href="' . $permalink . '">&hellip; [Read All]</a>';
 	}
 	return $excerpt;
 }
@@ -232,17 +230,24 @@ function flh_announcements_create_menu() {
 
 //Render the settings page
 function flh_announcements_settings_render_page() {
+	$lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tristique gravida eleifend. Nam sit amet est nunc. Nam id purus felis, quis gravida ipsum. Integer eu lectus tellus, non consequat risus. Duis ultrices nibh non neque mattis tincidunt. Suspendisse potenti. Phasellus ac nulla sit amet turpis condimentum rutrum nec a est. Morbi dictum urna nec orci suscipit ornare. Etiam ut nisi arcu, vitae semper urna. Donec fermentum ornare ipsum, ut suscipit nisl suscipit ac.';
+	$options = flh_announcements_get_options();
 	?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
 		<h2>Announcements Options</h2>
 		<?php //settings_errors(); ?>
-		<div id="ticker-wrapper-sample" class="ticker-wrapper has-js left" style="width:490px">
+		<div id="ticker-wrapper-sample" class="ticker-wrapper has-js left" style="width:620px">
 			<div id="ticker-sample" class="ticker">
 				<p id="ticker-content-sample" class="ticker-content" style="display: block; opacity: 1; left: 20px;">
-					Hello this is one announcement.
+				<?php echo flh_announcements_excerpt_max_charlength( $lorem_ipsum, '#', $options['max-chars'] ); ?>
 				</p>
 			</div>
+			<ul id="ticker-controls-sample" class="ticker-controls">
+				<li id="play-pause-sample" class="jnt-play-pause controls"></li>
+				<li id="prev-sample" class="jnt-prev controls"></li>
+				<li id="next-sample" class="jnt-next controls"></li>
+			</ul>
 		</div>
 		<br />
 
@@ -272,6 +277,16 @@ function flh_announcements_get_default_options() {
 	return apply_filters( 'flh_announcements_default_options', $defaults );
 }
 
+/* Get options from the database and merge with defaults
+ */
+function flh_announcements_get_options() {
+	$defaults = flh_announcements_get_default_options();
+	$options = get_option( 'flh_announcements_options', $defaults );
+	$options = wp_parse_args( $options, $defaults );
+
+	return $options;
+}
+
 
 add_action( 'admin_init', 'flh_announcements_options_init' );
 
@@ -289,10 +304,17 @@ function flh_announcements_options_init() {
 		'announcements_options'
 	);
 
+	add_settings_section(
+		'refresh-to-see',
+		'Save to see',
+		'__return_false',
+		'announcements_options'
+	);
+
 	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
 	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
-	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
-	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'general' );
+	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'refresh-to-see' );
+	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'refresh-to-see' );
 }
 
 function flh_announcements_validate_options( $input ) {
@@ -325,8 +347,7 @@ function flh_announcements_validate_options( $input ) {
 
 function flh_announcements_options_field_ticker_color() {
 	$defaults = flh_announcements_get_default_options();
-	$options = get_option( 'flh_announcements_options', $defaults );
-	$options = wp_parse_args( $options, $defaults );
+	$options = flh_announcements_get_options();
 	?>
 	<input type="text" name="flh_announcements_options[ticker-color]" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
 	<a href="#" class="tickerpickcolor hide-if-no-js" id="ticker-color-example"></a>
@@ -340,8 +361,7 @@ function flh_announcements_options_field_ticker_color() {
 
 function flh_announcements_options_field_text_color() {
 	$defaults = flh_announcements_get_default_options();
-	$options = get_option( 'flh_announcements_options', $defaults );
-	$options = wp_parse_args( $options, $defaults );
+	$options = flh_announcements_get_options();
 	?>
 	<input type="text" name="flh_announcements_options[text-color]" id="text-color" value="<?php echo esc_attr( $options['text-color'] ); ?>" />
 	<a href="#" class="textpickcolor hide-if-no-js" id="text-color-example"></a>
@@ -354,8 +374,7 @@ function flh_announcements_options_field_text_color() {
 
 function flh_announcements_options_field_ticker_height() {
 	$defaults = flh_announcements_get_default_options();
-	$options = get_option( 'flh_announcements_options', $defaults );
-	$options = wp_parse_args( $options, $defaults );
+	$options = flh_announcements_get_options();
 	?>
 	<input type="text" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $options['ticker-height'] ); ?>" />
 	<br />
@@ -365,8 +384,7 @@ function flh_announcements_options_field_ticker_height() {
 
 function flh_announcements_options_field_max_chars() {
 	$defaults = flh_announcements_get_default_options();
-	$options = get_option( 'flh_announcements_options', $defaults );
-	$options = wp_parse_args( $options, $defaults );
+	$options = flh_announcements_get_options();
 	?>
 	<input type="text" name="flh_announcements_options[max-chars]" id="max-chars" value="<?php echo esc_attr( $options['max-chars'] ); ?>" />
 	<br />
@@ -380,7 +398,7 @@ add_action( 'wp_head', 'flh_announcements_print_ticker_color_style' );
 
 function flh_announcements_print_ticker_color_style() {
 	$defaults = flh_announcements_get_default_options();
-	$options = get_option( 'flh_announcements_options', $defaults );
+	$options = flh_announcements_get_options();
 	?>
 	<style>
 	<?php
