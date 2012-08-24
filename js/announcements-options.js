@@ -20,6 +20,12 @@ var farbtastic2;
 		$('#ticker-content-sample').css('color', a);
 	};
 
+	//change the height of the sample ticker
+	var tickerChangeHeight = function(a) {
+		$('#ticker-height').val(a);
+		$('#ticker-wrapper-sample').css('height', a);
+	}
+
 	$(document).ready( function() {
 		//turn the default colour <span> below the textbox into a link
 		$('#ticker-default-color').wrapInner('<a href="#" />');
@@ -34,6 +40,7 @@ var farbtastic2;
 		//initialise colour picker and sample square values
 		tickerPickColor( $('#ticker-color').val() );
 		textPickColor( $('#text-color').val() );
+		tickerChangeHeight( $('#ticker-height').val() );
 
 		//show colour picker when sample colour square or button is clicked for ticker
 		$('.tickerpickcolor').click( function(e) {
@@ -70,6 +77,17 @@ var farbtastic2;
 				textPickColor( '#' + a );
 		});
 
+		$('#ticker-height').keyup( function() {
+			var a = $('#ticker-height').val();
+
+			if ( a.match(/[0-9]+px/) ) {
+				tickerChangeHeight( a );
+			}
+			else if( a.match(/[0-9]/) )
+				tickerChangeHeight( a + 'px' );
+		});
+
+
 		//hide colour pickers when click is outside of them
 		$(document).mousedown( function() {
 			$('#tickerColorPickerDiv').hide();
@@ -88,7 +106,7 @@ var farbtastic2;
 
 		//click event handler for Default height link
 		$('#default-height a').click( function(e) {
-			$('#ticker-height').val(this.innerHTML);
+			tickerChangeHeight( this.innerHTML );
 			e.preventDefault();
 		});
 
@@ -97,5 +115,6 @@ var farbtastic2;
 			$('#max-chars').val(this.innerHTML);
 			e.preventDefault();
 		});
+
 	});
 })(jQuery);
