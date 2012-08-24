@@ -110,9 +110,11 @@ function flh_announcements_handler() {
 	// don't output anything if there are no posts
 	if ( $announce_query->have_posts() ) {
 		$output .= '<ul id="js-news" class="js-hidden">';
+		$options = get_option( 'flh_announcements_options', flh_announcements_get_default_options() );
+		$max_chars = $options[ 'max-chars' ];
 	}
 	else
-		return $output;
+		return $output;		// empty string
 
 	while ( $announce_query->have_posts() ) : $announce_query->the_post();
 		$output .= '<li class="news-item">';
@@ -125,7 +127,7 @@ function flh_announcements_handler() {
 		//$content = str_replace( ']]>', ']]&gt;', $content );
 
 		//going to use my custom excerpt function instead
-		$content = flh_announcements_excerpt_max_charlength( 140 );
+		$content = flh_announcements_excerpt_max_charlength( $max_chars );
 
 		$output .= $content;
 		$output .= '</li>';
@@ -273,6 +275,7 @@ function flh_announcements_options_init() {
 	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
 	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
 	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
+	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'general' );
 }
 
 function flh_announcements_validate_options( $input ) {
@@ -286,11 +289,18 @@ function flh_announcements_validate_options( $input ) {
 	if ( isset( $input['text-color'] ) && preg_match( '/^#?([a-f0-9]{3}){1,2}$/i', $input['text-color'] ) )
 		$output['text-color'] = '#' . strtolower( ltrim( $input['text-color'], '#' ) );
 
+	// ticker height must in in px. if just a number is given, add px to it
 	if ( isset( $input['ticker-height'] ) ) {
 		if ( preg_match( '/^[0-9]+px$/', $input['ticker-height'] ) )	//if number followed by px
 			$output['ticker-height'] = strtolower( $input['ticker-height'] );
 		elseif ( preg_match( '/^[0-9]+$/', $input['ticker-height'] ) )	//just a number, append px to it
 			$output['ticker-height'] = $input['ticker-height'] . 'px';
+	}
+
+	// max chars must be a decimal number
+	if( isset( $input['max-chars'] ) ) {
+		if ( preg_match( '/^[0-9]+$/', $input['max-chars'] ) )		//numbers
+			$output['max-chars'] = $input['max-chars'];
 	}
 
 	return $output;
@@ -334,6 +344,17 @@ function flh_announcements_options_field_ticker_height() {
 	<span><?php printf( __( 'Default height: %s', 'flh_announcements' ), '<span id="default-height">' . $defaults['ticker-height'] . '</span>' ); ?></span>
 	<?php
 }
+
+function flh_announcements_options_field_max_chars() {
+	$defaults = flh_announcements_get_default_options();
+	$options = get_option( 'flh_announcements_options', $defaults );
+	?>
+	<input type="text" name="flh_announcements_options[max-chars]" id="max-chars" value="<?php echo esc_attr( $options['max-chars'] ); ?>" />
+	<br />
+	<span><?php printf( __( 'Default maximum number of characters: %s', 'flh_announcements' ), '<span id="default-chars">' . $defaults['max-chars'] . '</span>' ); ?></span>
+	<?php
+}
+
 
 // output Announcements options style settings in page header
 add_action( 'wp_head', 'flh_announcements_print_ticker_color_style' );
