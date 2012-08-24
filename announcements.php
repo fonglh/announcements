@@ -110,7 +110,9 @@ function flh_announcements_handler() {
 	// don't output anything if there are no posts
 	if ( $announce_query->have_posts() ) {
 		$output .= '<ul id="js-news" class="js-hidden">';
-		$options = get_option( 'flh_announcements_options', flh_announcements_get_default_options() );
+		$defaults = flh_announcements_get_default_options();
+		$options = get_option( 'flh_announcements_options', $defaults );
+		$options = wp_parse_args( $options, $defaults );
 		$max_chars = $options[ 'max-chars' ];
 	}
 	else
