@@ -351,7 +351,7 @@ function flh_announcements_options_field_max_chars() {
 	?>
 	<input type="text" name="flh_announcements_options[max-chars]" id="max-chars" value="<?php echo esc_attr( $options['max-chars'] ); ?>" />
 	<br />
-	<span><?php printf( __( 'Default maximum number of characters: %s', 'flh_announcements' ), '<span id="default-chars">' . $defaults['max-chars'] . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default maximum: %s', 'flh_announcements' ), '<span id="default-max-chars">' . $defaults['max-chars'] . '</span>' ); ?></span>
 	<?php
 }
 

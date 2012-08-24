@@ -21,6 +21,7 @@ var farbtastic2;
 		$('#ticker-default-color').wrapInner('<a href="#" />');
 		$('#text-default-color').wrapInner('<a href="#" />');
 		$('#default-height').wrapInner('<a href="#" />');
+		$('#default-max-chars').wrapInner('<a href="#" />');
 
 
 		farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
@@ -84,6 +85,12 @@ var farbtastic2;
 		//click event handler for Default height link
 		$('#default-height a').click( function(e) {
 			$('#ticker-height').val(this.innerHTML);
+			e.preventDefault();
+		});
+
+		//click event handler for Default max chars link
+		$('#default-max-chars a').click( function(e) {
+			$('#max-chars').val(this.innerHTML);
 			e.preventDefault();
 		});
 	});
