@@ -16,8 +16,14 @@
 	padding: 4px 14px;
 }
 
+#expt {
+	/* need to set this for the slider to stay in position? */
+	height: 20px;
+	color: #000000;
+}
+
 #expt::after {
-	content: attr(data-value) '/' attr(max);
+	content: attr(data-value) ' / ' attr(max) 'px';
 	position: relative;
-	left: 135px; top: -20px;
+	left: 155px; top: -15px;
 }
