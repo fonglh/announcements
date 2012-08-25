@@ -267,6 +267,7 @@ function flh_announcements_settings_render_page() {
 
 		<form method="post" action="options.php">
 			<?php
+				submit_button();
 				settings_fields( 'flh_announcements_options' );
 				do_settings_sections( 'announcements_options' );
 				submit_button();
@@ -301,6 +302,29 @@ function flh_announcements_get_options() {
 	$options = wp_parse_args( $options, $defaults );
 
 	return $options;
+}
+
+/* The following 4 functions define min and max values for ticker height and text size.
+ * Extra functions are needed so the validation function can access these values as well.
+ *
+ * Because Firefox doesn't support sliders and replaces them with textboxes, the validation function
+ * has to check that the input is within range.
+ *
+ */
+function flh_announcements_get_min_ticker_height() {
+	return apply_filters( 'flh_announcements_min_ticker_height', 32 );
+}
+
+function flh_announcements_get_max_ticker_height() {
+	return apply_filters( 'flh_announcements_max_ticker_height', 400 );
+}
+
+function flh_announcements_get_min_text_size() {
+	return apply_filters( 'flh_announcements_min_text_size', 8 );
+}
+
+function flh_announcements_get_max_text_size() {
+	return apply_filters( 'flh_announcements_max_text_size', 32 );
 }
 
 
@@ -378,14 +402,24 @@ function flh_announcements_validate_options( $input ) {
 
 	// text size must in in px. if just a number is given, add px to it
 	if ( isset( $input['text-size'] ) ) {
-		if ( preg_match( '/^[0-9]+$/', $input['text-size'] ) )	//just a number, append px to it
-			$output['text-size'] = $input['text-size'] . 'px';
+		if ( preg_match( '/^[0-9]+$/', $input['text-size'] ) ) {	//just a number, append px to it
+			//check that input is within range
+			if ( $input['text-size'] >= flh_announcements_get_min_text_size() &&
+					$input['text-size'] <= flh_announcements_get_max_text_size() ) {
+				$output['text-size'] = $input['text-size'] . 'px';
+			}
+		}
 	}
 
 	// ticker height must in in px. if just a number is given, add px to it
 	if ( isset( $input['ticker-height'] ) ) {
-		if ( preg_match( '/^[0-9]+$/', $input['ticker-height'] ) )	//just a number, append px to it
-			$output['ticker-height'] = $input['ticker-height'] . 'px';
+		if ( preg_match( '/^[0-9]+$/', $input['ticker-height'] ) ) {	//just a number, append px to it
+			// check that input is within range
+			if ( $input['ticker-height'] >= flh_announcements_get_min_ticker_height() &&
+					$input['ticker-height'] <= flh_announcements_get_max_ticker_height() ) {
+				$output['ticker-height'] = $input['ticker-height'] . 'px';
+			}
+		}
 	}
 
 	// max chars must be a decimal number
@@ -446,7 +480,7 @@ function flh_announcements_options_field_ticker_height() {
 	$ticker_height = $options['ticker-height'];
 	$ticker_height = substr( $ticker_height, 0, -2 );	//strip out 'px' from the option value
 	?>
-	<input type="range" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $ticker_height ); ?>" min="<?php echo apply_filters( 'flh_announcements_min_ticker_height', 32 ); ?>" max="<?php echo apply_filters( 'flh_announcements_max_ticker_height', 400 ); ?>" />
+	<input type="range" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $ticker_height ); ?>" min="<?php echo flh_announcements_get_min_ticker_height(); ?>" max="<?php echo flh_announcements_get_max_ticker_height(); ?>" />
 	<br />
 	<span><?php printf( __( 'Default height: %s', 'flh_announcements' ), '<span id="default-height">' . $defaults['ticker-height'] . '</span>' ); ?></span>
 	<?php
@@ -472,7 +506,7 @@ function flh_announcements_options_field_text_size() {
 	$text_size = $options['text-size'];
 	$text_size = substr( $text_size, 0, -2 );		//strip out 'px' from the option value
 	?>
-	<input type="range" name="flh_announcements_options[text-size]" id="text-size" value="<?php echo esc_attr( $text_size ); ?>" min="<?php echo apply_filters( 'flh_announcements_min_text_size', 8 ); ?>" max="<?php echo apply_filters( 'flh_announcements_max_text_size', 32 ); ?>" />
+	<input type="range" name="flh_announcements_options[text-size]" id="text-size" value="<?php echo esc_attr( $text_size ); ?>" min="<?php echo flh_announcements_get_min_text_size(); ?>" max="<?php echo flh_announcements_get_max_text_size(); ?>" />
 	<br />
 	<span><?php printf( __( 'Default text size: %s', 'flh_announcements' ), '<span id="default-text-size">' . $defaults['text-size'] . '</span>' ); ?></span>
 	<?php
