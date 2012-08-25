@@ -446,7 +446,7 @@ function flh_announcements_options_field_ticker_height() {
 	$ticker_height = $options['ticker-height'];
 	$ticker_height = substr( $ticker_height, 0, -2 );	//strip out 'px' from the option value
 	?>
-	<input type="range" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $ticker_height ); ?>" min="32" max="400" />
+	<input type="range" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $ticker_height ); ?>" min="<?php echo apply_filters( 'flh_announcements_min_ticker_height', 32 ); ?>" max="<?php echo apply_filters( 'flh_announcements_max_ticker_height', 400 ); ?>" />
 	<br />
 	<span><?php printf( __( 'Default height: %s', 'flh_announcements' ), '<span id="default-height">' . $defaults['ticker-height'] . '</span>' ); ?></span>
 	<?php
@@ -472,7 +472,7 @@ function flh_announcements_options_field_text_size() {
 	$text_size = $options['text-size'];
 	$text_size = substr( $text_size, 0, -2 );		//strip out 'px' from the option value
 	?>
-	<input type="range" name="flh_announcements_options[text-size]" id="text-size" value="<?php echo esc_attr( $text_size ); ?>" min="8" max="32" />
+	<input type="range" name="flh_announcements_options[text-size]" id="text-size" value="<?php echo esc_attr( $text_size ); ?>" min="<?php echo apply_filters( 'flh_announcements_min_text_size', 8 ); ?>" max="<?php echo apply_filters( 'flh_announcements_max_text_size', 32 ); ?>" />
 	<br />
 	<span><?php printf( __( 'Default text size: %s', 'flh_announcements' ), '<span id="default-text-size">' . $defaults['text-size'] . '</span>' ); ?></span>
 	<?php
