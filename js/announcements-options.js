@@ -23,7 +23,6 @@ var farbtastic2;
 
 	//change the height of the sample ticker
 	var tickerChangeHeight = function(a) {
-		$('#ticker-height').val(a);
 		$('#ticker-wrapper-sample').css('height', a);
 	}
 
@@ -80,12 +79,14 @@ var farbtastic2;
 
 		$('#ticker-height').keyup( function() {
 			var a = $('#ticker-height').val();
+			var b = a;
 
-			if ( a.match(/[0-9]+px/) ) {
-				tickerChangeHeight( a );
-			}
-			else if( a.match(/[0-9]/) )
+			a = a.replace(/[^0-9]/, '');
+			if ( a !== b )
+				$('#ticker-height').val(a);
+			if ( a.match(/^[0-9]+$/) ) {
 				tickerChangeHeight( a + 'px' );
+			}
 		});
 
 
@@ -107,6 +108,7 @@ var farbtastic2;
 
 		//click event handler for Default height link
 		$('#default-height a').click( function(e) {
+			$('#ticker-height').val( this.innerHTML.slice(0,-2) );
 			tickerChangeHeight( this.innerHTML );
 			e.preventDefault();
 		});

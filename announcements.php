@@ -375,8 +375,10 @@ function flh_announcements_options_field_text_color() {
 function flh_announcements_options_field_ticker_height() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
+	$ticker_height = $options['ticker-height'];
+	$ticker_height = substr( $ticker_height, 0, -2 );
 	?>
-	<input type="text" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $options['ticker-height'] ); ?>" />
+	<input type="text" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $ticker_height ); ?>" />px
 	<br />
 	<span><?php printf( __( 'Default height: %s', 'flh_announcements' ), '<span id="default-height">' . $defaults['ticker-height'] . '</span>' ); ?></span>
 	<?php
