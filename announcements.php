@@ -239,7 +239,7 @@ function flh_announcements_settings_render_page() {
 		<?php //settings_errors(); ?>
 		<div id="ticker-wrapper-sample" class="ticker-wrapper has-js left" style="width:620px">
 			<div id="ticker-sample" class="ticker">
-				<p id="ticker-content-sample" class="ticker-content" style="display: block; opacity: 1; left: 20px; font-size: <?php echo $options['sample-text-size']; ?>;">
+				<p id="ticker-content-sample" class="ticker-content" style="display: block; opacity: 1; left: 20px; font-size: <?php echo $options['text-size']; ?>;">
 				<?php echo flh_announcements_excerpt_max_charlength( $lorem_ipsum, '#', $options['max-chars'] ); ?>
 				</p>
 			</div>
@@ -273,7 +273,7 @@ function flh_announcements_get_default_options() {
 		'text-color' => '#ffffff',
 		'ticker-height' => '58px',
 		'max-chars' => 140,
-		'sample-text-size' => '16px'
+		'text-size' => '16px'
 	);
 
 	return apply_filters( 'flh_announcements_default_options', $defaults );
@@ -309,15 +309,19 @@ function flh_announcements_options_init() {
 	add_settings_section(
 		'refresh-to-see',
 		'Save to see',
-		'__return_false',
+		'flh_announcements_section_callback',
 		'announcements_options'
 	);
 
 	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
 	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
+	add_settings_field( 'text-size', 'Text Size', 'flh_announcements_options_field_sample_text_size', 'announcements_options', 'general' );
 	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
 	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'refresh-to-see' );
-	add_settings_field( 'sample-text-size', 'Sample Text Size', 'flh_announcements_options_field_sample_text_size', 'announcements_options', 'refresh-to-see' );
+}
+
+function flh_announcements_section_callback() {
+	echo "hello world";
 }
 
 function flh_announcements_validate_options( $input ) {
@@ -346,11 +350,11 @@ function flh_announcements_validate_options( $input ) {
 	}
 
 	// sample text size must in in px. if just a number is given, add px to it
-	if ( isset( $input['sample-text-size'] ) ) {
-		if ( preg_match( '/^[0-9]+px$/', $input['sample-text-size'] ) )	//if number followed by px
-			$output['sample-text-size'] = strtolower( $input['sample-text-size'] );
-		elseif ( preg_match( '/^[0-9]+$/', $input['sample-text-size'] ) )	//just a number, append px to it
-			$output['sample-text-size'] = $input['sample-text-size'] . 'px';
+	if ( isset( $input['text-size'] ) ) {
+		if ( preg_match( '/^[0-9]+px$/', $input['text-size'] ) )	//if number followed by px
+			$output['text-size'] = strtolower( $input['text-size'] );
+		elseif ( preg_match( '/^[0-9]+$/', $input['text-size'] ) )	//just a number, append px to it
+			$output['text-size'] = $input['text-size'] . 'px';
 	}
 
 
@@ -388,7 +392,7 @@ function flh_announcements_options_field_ticker_height() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
 	$ticker_height = $options['ticker-height'];
-	$ticker_height = substr( $ticker_height, 0, -2 );
+	$ticker_height = substr( $ticker_height, 0, -2 );	//strip out 'px' from the option value
 	?>
 	<input type="range" name="flh_announcements_options[ticker-height]" id="ticker-height" value="<?php echo esc_attr( $ticker_height ); ?>" min="32" max="400" />
 	<br />
@@ -409,10 +413,12 @@ function flh_announcements_options_field_max_chars() {
 function flh_announcements_options_field_sample_text_size() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
+	$text_size = $options['text-size'];
+	$text_size = substr( $text_size, 0, -2 );		//strip out 'px' from the option value
 	?>
-	<input type="text" name="flh_announcements_options[sample-text-size]" id="sample-text-size" value="<?php echo esc_attr( $options['sample-text-size'] ); ?>" />
+	<input type="range" name="flh_announcements_options[text-size]" id="text-size" value="<?php echo esc_attr( $text_size ); ?>" min="8" max="32" />
 	<br />
-	<span><?php printf( __( 'Default sample text size: %s', 'flh_announcements' ), '<span id="default-sample-text-size">' . $defaults['sample-text-size'] . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default sample text size: %s', 'flh_announcements' ), '<span id="default-text-size">' . $defaults['text-size'] . '</span>' ); ?></span>
 	<?php
 }
 
@@ -435,7 +441,7 @@ function flh_announcements_print_ticker_color_style() {
 		.ticker-content a {
 			background-color: <?php echo $options['ticker-color']; ?>;
 			color: <?php echo $options['text-color']; ?>;
-		
+			font-size: <?php echo $options['text-size']; ?>;	
 		}
 		<?php
 	}

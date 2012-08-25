@@ -1,6 +1,7 @@
 var farbtastic;
 var farbtastic2;
-var slider;
+var heightSlider;
+var sizeSlider;
 
 (function($){
 	// change the colour of the sample square and change the colour picker's selected colour for ticker color
@@ -27,18 +28,28 @@ var slider;
 		$('#ticker-wrapper-sample').css('height', a);
 	}
 
+	//change the font-size of the sample ticker
+	var tickerChangeSize = function(a) {
+		$('#ticker-content-sample').css('font-size', a);
+	}
+
 	$(document).ready( function() {
-		//get a handle to the slider and initialize the dataset value
+		//get a handle to the heightSlider and initialize the dataset value
 		//inspired from http://www.htmlfivecan.com/#23 
-		slider = document.querySelector( '#ticker-height' );
-		slider.dataset.value = slider.value;
+		heightSlider = document.querySelector( '#ticker-height' );
+		heightSlider.dataset.value = heightSlider.value;
+
+		//get a handle to the heightSlider and initialize the dataset value
+		//inspired from http://www.htmlfivecan.com/#23 
+		sizeSlider = document.querySelector( '#text-size' );
+		sizeSlider.dataset.value = sizeSlider.value;
 
 		//turn the default colour <span> below the textbox into a link
 		$('#ticker-default-color').wrapInner('<a href="#" />');
 		$('#text-default-color').wrapInner('<a href="#" />');
 		$('#default-height').wrapInner('<a href="#" />');
 		$('#default-max-chars').wrapInner('<a href="#" />');
-		$('#default-sample-text-size').wrapInner('<a href="#" />');
+		$('#default-text-size').wrapInner('<a href="#" />');
 
 
 		farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
@@ -85,10 +96,14 @@ var slider;
 		});
 
 		$('#ticker-height').change( function() {
-			slider.dataset.value = $('#ticker-height').val();
+			heightSlider.dataset.value = $('#ticker-height').val();
 			tickerChangeHeight( $('#ticker-height').val() + 'px' );
 		});
 
+		$('#text-size').change( function() {
+			sizeSlider.dataset.value = $('#text-size').val();
+			tickerChangeSize( $('#text-size').val() + 'px' );
+		});
 
 		//hide colour pickers when click is outside of them
 		$(document).mousedown( function() {
@@ -109,7 +124,7 @@ var slider;
 		//click event handler for Default height link
 		$('#default-height a').click( function(e) {
 			$('#ticker-height').val( this.innerHTML.slice(0,-2) );
-			slider.dataset.value = $('#ticker-height').val();
+			heightSlider.dataset.value = $('#ticker-height').val();
 			tickerChangeHeight( this.innerHTML );
 			e.preventDefault();
 		});
@@ -121,8 +136,10 @@ var slider;
 		});
 
 		//click event handler for Default sample text size link
-		$('#default-sample-text-size a').click( function(e) {
-			$('#sample-text-size').val(this.innerHTML);
+		$('#default-text-size a').click( function(e) {
+			$('#text-size').val(this.innerHTML.slice(0, -2) );
+			sizeSlider.dataset.value = $('#text-size').val();
+			tickerChangeSize( this.innerHTML );
 			e.preventDefault();
 		});
 	});
