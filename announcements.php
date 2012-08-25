@@ -139,14 +139,23 @@ function flh_announcements_handler() {
 	return $output;
 }
 
-// get the excerpt with a maximum of $charlength characters
-// code is adapted from http://codex.wordpress.org/Function_Reference/get_the_excerpt
+/* Output an excerpt with a maximum of $charlength characters (plus a bit more because of the [Read All] )
+ *
+ * code is adapted from http://codex.wordpress.org/Function_Reference/get_the_excerpt
+ * 
+ * @param $text string with the text to be shortened
+ * @param $permalink link to use for the [Read All] link if $text is longer than $charlength
+ * @param $charlength int for maximum number of characters before the ending will be replaced with [Read All]
+ *
+ * @returns $text if it was less than $charlength, else a shortened text with [Read All] as the hyperlink text
+ */
 function flh_announcements_excerpt_max_charlength( $text, $permalink, $charlength ) {
 	$excerpt = $text;
 	$charlength++;
 
 	if( mb_strlen( $excerpt ) > $charlength ) {
 		//the -5 seems to be to make up for the [...] at the end
+		//use -10 here because the [Read All] bit is longer, it's actually not quite enough
 		$subex = mb_substr( $excerpt, 0, $charlength - 10 );
 		$exwords = explode(' ', $subex );
 		//figure out how long the last (possibly) partial word is
@@ -165,7 +174,7 @@ function flh_announcements_excerpt_max_charlength( $text, $permalink, $charlengt
 
 //filter function for WP_Query used in shortcode handler
 function flh_announcements_filter_where( $where = '' ) {
-	//future posts
+	//refers to future posts
 	$where .= " AND post_date >= '" . date( 'Y-m-d H:i:s' ) . "'";
 
 	return $where;
@@ -191,18 +200,19 @@ function flh_announcements_ticker_enqueue() {
 		);
 }
 
-//enqueue js scripts and styles only for my options page so it doesn't screw up other settings pages
+//enqueue js scripts and styles only for my own options page so it doesn't screw up other settings pages
 add_action( 'admin_print_styles-settings_page_announcements_options', 'flh_announcements_admin_enqueue' );
 
 function flh_announcements_admin_enqueue() {
 	//this changes the colour in the colour samples when the text changes
+	//also makes the sliders and all the other dynamic stuff work
 	wp_enqueue_script(
 			'flh-announcements-options',
 			plugins_url( 'announcements/js/announcements-options.js' ),
 			array( 'farbtastic' )
 		);
 
-	// this is for the colour samples
+	// this is for the colour samples and slider text
 	wp_enqueue_style(
 			'flh-announcements-options-style',
 			plugins_url( 'announcements/css/announcements-options.css' ),	
@@ -228,15 +238,19 @@ function flh_announcements_create_menu() {
 	add_options_page( 'Announcements Options', 'Announcements', 'manage_options', 'announcements_options', 'flh_announcements_settings_render_page' );
 }
 
-//Render the settings page
+/* Render the settings page.
+ */
 function flh_announcements_settings_render_page() {
 	$lorem_ipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tristique gravida eleifend. Nam sit amet est nunc. Nam id purus felis, quis gravida ipsum. Integer eu lectus tellus, non consequat risus. Duis ultrices nibh non neque mattis tincidunt. Suspendisse potenti. Phasellus ac nulla sit amet turpis condimentum rutrum nec a est. Morbi dictum urna nec orci suscipit ornare. Etiam ut nisi arcu, vitae semper urna. Donec fermentum ornare ipsum, ut suscipit nisl suscipit ac.';
 	$options = flh_announcements_get_options();
+
 	?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
 		<h2>Announcements Options</h2>
 		<?php //settings_errors(); ?>
+
+		<?php // Output sample ticker ?>
 		<div id="ticker-wrapper-sample" class="ticker-wrapper has-js left" style="width:620px">
 			<div id="ticker-sample" class="ticker">
 				<p id="ticker-content-sample" class="ticker-content" style="display: block; opacity: 1; left: 20px; font-size: <?php echo $options['text-size']; ?>;">
@@ -290,6 +304,8 @@ function flh_announcements_get_options() {
 }
 
 
+/* Use the WordPress Settings API to set up the Settings sections and fields
+ */
 add_action( 'admin_init', 'flh_announcements_options_init' );
 
 function flh_announcements_options_init() {
@@ -300,10 +316,10 @@ function flh_announcements_options_init() {
 	);
 
 	add_settings_section(
-		'ticker-appearance',
-		'Ticker Appearance',
-		'flh_announcements_appearance_section',
-		'announcements_options'
+		'ticker-appearance',	// the 'id' attribute of tags
+		'Ticker Appearance',	// section title
+		'flh_announcements_appearance_section',		//function callback for section content
+		'announcements_options'						//menu page to display section
 	);
 
 	add_settings_section(
@@ -313,19 +329,18 @@ function flh_announcements_options_init() {
 		'announcements_options'
 	);
 
+	// Ticker Appearance Settings
 	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'ticker-appearance' );
 	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'ticker-appearance' );
-	add_settings_field( 'text-size', 'Text Size', 'flh_announcements_options_field_sample_text_size', 'announcements_options', 'ticker-appearance' );
+	add_settings_field( 'text-size', 'Text Size', 'flh_announcements_options_field_text_size', 'announcements_options', 'ticker-appearance' );
 	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'ticker-appearance' );
+
+	// Ticker Behavior Settings
 	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'ticker-behavior-section' );
 }
 
-function flh_announcements_behavior_section() {
-	?>
-	<p>Control elements of the ticker's behavior here. Save the changes to see them take effect</p>
-	<?php
-}
-
+/* Callback for Ticker Appearance section
+ */
 function flh_announcements_appearance_section() {
 	?>
 	<p>Control what your ticker will look like. Changes here can be immediately previewed in the sample ticker.</p>
@@ -334,6 +349,22 @@ function flh_announcements_appearance_section() {
 	
 }
 
+/* Callback for the Ticker Behavior section
+ */
+function flh_announcements_behavior_section() {
+	?>
+	<p>Control elements of the ticker's behavior here. Save the changes to see them take effect</p>
+	<?php
+}
+
+
+/* Validation function called when options are being saved to the database.
+ * Set in the register_settings() function.
+ *
+ * @param $input array of the settings from the options page
+ * 
+ * @returns array of sanitized settings. If input was invalid, use default settings
+ */
 function flh_announcements_validate_options( $input ) {
 	$output = flh_announcements_get_default_options();
 
@@ -345,11 +376,15 @@ function flh_announcements_validate_options( $input ) {
 	if ( isset( $input['text-color'] ) && preg_match( '/^#?([a-f0-9]{3}){1,2}$/i', $input['text-color'] ) )
 		$output['text-color'] = '#' . strtolower( ltrim( $input['text-color'], '#' ) );
 
+	// text size must in in px. if just a number is given, add px to it
+	if ( isset( $input['text-size'] ) ) {
+		if ( preg_match( '/^[0-9]+$/', $input['text-size'] ) )	//just a number, append px to it
+			$output['text-size'] = $input['text-size'] . 'px';
+	}
+
 	// ticker height must in in px. if just a number is given, add px to it
 	if ( isset( $input['ticker-height'] ) ) {
-		if ( preg_match( '/^[0-9]+px$/', $input['ticker-height'] ) )	//if number followed by px
-			$output['ticker-height'] = strtolower( $input['ticker-height'] );
-		elseif ( preg_match( '/^[0-9]+$/', $input['ticker-height'] ) )	//just a number, append px to it
+		if ( preg_match( '/^[0-9]+$/', $input['ticker-height'] ) )	//just a number, append px to it
 			$output['ticker-height'] = $input['ticker-height'] . 'px';
 	}
 
@@ -359,18 +394,19 @@ function flh_announcements_validate_options( $input ) {
 			$output['max-chars'] = $input['max-chars'];
 	}
 
-	// sample text size must in in px. if just a number is given, add px to it
-	if ( isset( $input['text-size'] ) ) {
-		if ( preg_match( '/^[0-9]+px$/', $input['text-size'] ) )	//if number followed by px
-			$output['text-size'] = strtolower( $input['text-size'] );
-		elseif ( preg_match( '/^[0-9]+$/', $input['text-size'] ) )	//just a number, append px to it
-			$output['text-size'] = $input['text-size'] . 'px';
-	}
-
-
 	return $output;
 }
 
+/* ==================================================================================================== */
+/* Callback functions to display the individual settings initialized by add_settings_field() */
+/* ==================================================================================================== */
+
+/* Callback function to display colour picker for the ticker background
+ *
+ * Code was adapted from twentyeleven theme's link colour picker.
+ * Setting name is taken from the part in [] in the name attributes. That's the array key value that goes 
+ * to the validation function.
+ */
 function flh_announcements_options_field_ticker_color() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
@@ -385,6 +421,8 @@ function flh_announcements_options_field_ticker_color() {
 
 }
 
+/* Callback function to display colour picker for the ticker text
+ */
 function flh_announcements_options_field_text_color() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
@@ -398,6 +436,10 @@ function flh_announcements_options_field_text_color() {
 	<?php
 }
 
+/* Callback function to display slider for the ticker height.
+ * 
+ * Minimum and maximum values for the slider are set here.
+ */
 function flh_announcements_options_field_ticker_height() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
@@ -410,6 +452,8 @@ function flh_announcements_options_field_ticker_height() {
 	<?php
 }
 
+/* Callback function to display textbox for max chars
+ */
 function flh_announcements_options_field_max_chars() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
@@ -420,7 +464,9 @@ function flh_announcements_options_field_max_chars() {
 	<?php
 }
 
-function flh_announcements_options_field_sample_text_size() {
+/* Callback function to display slider for text size
+ */
+function flh_announcements_options_field_text_size() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
 	$text_size = $options['text-size'];
@@ -428,13 +474,17 @@ function flh_announcements_options_field_sample_text_size() {
 	?>
 	<input type="range" name="flh_announcements_options[text-size]" id="text-size" value="<?php echo esc_attr( $text_size ); ?>" min="8" max="32" />
 	<br />
-	<span><?php printf( __( 'Default sample text size: %s', 'flh_announcements' ), '<span id="default-text-size">' . $defaults['text-size'] . '</span>' ); ?></span>
+	<span><?php printf( __( 'Default text size: %s', 'flh_announcements' ), '<span id="default-text-size">' . $defaults['text-size'] . '</span>' ); ?></span>
 	<?php
 }
 
 // output Announcements options style settings in page header
 add_action( 'wp_head', 'flh_announcements_print_ticker_color_style' );
 
+/* Action which outputs style code in the webpage's <head> section and thus puts the options into effect.
+ * 
+ * Method adapted from twenty eleven's implementation of link colour.
+ */
 function flh_announcements_print_ticker_color_style() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
@@ -442,8 +492,9 @@ function flh_announcements_print_ticker_color_style() {
 	<style>
 	<?php
 
-	// for simplicity, just output both colour options if either of them do not match the default
-	if ( $options['ticker-color'] !== $defaults['ticker-color'] || $options['text-color'] !== $defaults['text-color'] ) {
+	// for simplicity, just output the whole chunk if any of the options don't match the default
+	if ( $options['ticker-color'] !== $defaults['ticker-color'] || $options['text-color'] !== $defaults['text-color'] || 
+			$options['text-size'] !== $defaults['text-size'] ) {
 		?>
 		.ticker, 
 		.ticker-wrapper.has-js,
@@ -455,7 +506,8 @@ function flh_announcements_print_ticker_color_style() {
 		}
 		<?php
 	}
-	
+
+	// style ticker height
 	if ( $options['ticker-height'] !== $defaults['ticker-height'] ) {
 		?>
 		.ticker-wrapper.has-js {
