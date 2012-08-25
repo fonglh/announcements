@@ -28,7 +28,9 @@ var slider;
 	}
 
 	$(document).ready( function() {
-		slider = document.querySelector( '#expt' );
+		//get a handle to the slider and initialize the dataset value
+		//inspired from http://www.htmlfivecan.com/#23 
+		slider = document.querySelector( '#ticker-height' );
 		slider.dataset.value = slider.value;
 
 		//turn the default colour <span> below the textbox into a link
@@ -81,21 +83,9 @@ var slider;
 				textPickColor( '#' + a );
 		});
 
-		$('#ticker-height').keyup( function() {
-			var a = $('#ticker-height').val();
-			var b = a;
-
-			a = a.replace(/[^0-9]/, '');
-			if ( a !== b )
-				$('#ticker-height').val(a);
-			if ( a.match(/^[0-9]+$/) ) {
-				tickerChangeHeight( a + 'px' );
-			}
-		});
-
-		$('#expt').change( function() {
-			slider.dataset.value = $('#expt').val();
-			tickerChangeHeight( $('#expt').val() + 'px' );
+		$('#ticker-height').change( function() {
+			slider.dataset.value = $('#ticker-height').val();
+			tickerChangeHeight( $('#ticker-height').val() + 'px' );
 		});
 
 
@@ -118,6 +108,7 @@ var slider;
 		//click event handler for Default height link
 		$('#default-height a').click( function(e) {
 			$('#ticker-height').val( this.innerHTML.slice(0,-2) );
+			slider.dataset.value = $('#ticker-height').val();
 			tickerChangeHeight( this.innerHTML );
 			e.preventDefault();
 		});

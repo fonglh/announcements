@@ -16,13 +16,13 @@
 	padding: 4px 14px;
 }
 
-#expt {
+#ticker-height {
 	/* need to set this for the slider to stay in position? */
 	height: 20px;
 	color: #000000;
 }
 
-#expt::after {
+#ticker-height::after {
 	content: attr(data-value) ' / ' attr(max) 'px';
 	position: relative;
 	left: 155px; top: -15px;
