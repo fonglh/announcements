@@ -315,11 +315,12 @@ function flh_announcements_options_init() {
 	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
 	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
 	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'refresh-to-see' );
+	add_settings_field( 'expt', 'Experimental', 'flh_announcements_options_field_slider', 'announcements_options', 'refresh-to-see' );
 }
 
 function flh_announcements_validate_options( $input ) {
 	$output = flh_announcements_get_default_options();
-
+print_r($input);die();
 	// Ticker color must be 3 or 6 hexadecimal characters
 	if ( isset( $input['ticker-color'] ) && preg_match( '/^#?([a-f0-9]{3}){1,2}$/i', $input['ticker-color'] ) )
 		$output['ticker-color'] = '#' . strtolower( ltrim( $input['ticker-color'], '#' ) );
@@ -394,6 +395,11 @@ function flh_announcements_options_field_max_chars() {
 	<?php
 }
 
+function flh_announcements_options_field_slider() {
+	?>
+	<input type="range" name="flh_announcements_options[expt]" id="expt" value="25" min="0" max="100" />
+	<?php
+}
 
 // output Announcements options style settings in page header
 add_action( 'wp_head', 'flh_announcements_print_ticker_color_style' );
