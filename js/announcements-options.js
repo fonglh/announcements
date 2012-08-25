@@ -1,5 +1,8 @@
+//handles for the colour pickers
 var farbtastic;
 var farbtastic2;
+
+//handles for the sliders
 var heightSlider;
 var sizeSlider;
 

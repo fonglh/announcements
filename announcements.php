@@ -300,28 +300,38 @@ function flh_announcements_options_init() {
 	);
 
 	add_settings_section(
-		'general',
-		'',
-		'__return_false',
+		'ticker-appearance',
+		'Ticker Appearance',
+		'flh_announcements_appearance_section',
 		'announcements_options'
 	);
 
 	add_settings_section(
-		'refresh-to-see',
-		'Save to see',
-		'flh_announcements_section_callback',
+		'ticker-behavior-section',
+		'Ticker Behavior',
+		'flh_announcements_behavior_section',
 		'announcements_options'
 	);
 
-	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'general' );
-	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'general' );
-	add_settings_field( 'text-size', 'Text Size', 'flh_announcements_options_field_sample_text_size', 'announcements_options', 'general' );
-	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'general' );
-	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'refresh-to-see' );
+	add_settings_field( 'ticker-color', 'Ticker Color', 'flh_announcements_options_field_ticker_color', 'announcements_options', 'ticker-appearance' );
+	add_settings_field( 'text-color', 'Text Color', 'flh_announcements_options_field_text_color', 'announcements_options', 'ticker-appearance' );
+	add_settings_field( 'text-size', 'Text Size', 'flh_announcements_options_field_sample_text_size', 'announcements_options', 'ticker-appearance' );
+	add_settings_field( 'ticker-height', 'Ticker Height (px)', 'flh_announcements_options_field_ticker_height', 'announcements_options', 'ticker-appearance' );
+	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'ticker-behavior-section' );
 }
 
-function flh_announcements_section_callback() {
-	echo "hello world";
+function flh_announcements_behavior_section() {
+	?>
+	<p>Control elements of the ticker's behavior here. Save the changes to see them take effect</p>
+	<?php
+}
+
+function flh_announcements_appearance_section() {
+	?>
+	<p>Control what your ticker will look like. Changes here can be immediately previewed in the sample ticker.</p>
+	<p>Save the changes to see them take effect on your site</p>
+	<?php
+	
 }
 
 function flh_announcements_validate_options( $input ) {
