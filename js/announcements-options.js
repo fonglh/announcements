@@ -38,6 +38,7 @@ var slider;
 		$('#text-default-color').wrapInner('<a href="#" />');
 		$('#default-height').wrapInner('<a href="#" />');
 		$('#default-max-chars').wrapInner('<a href="#" />');
+		$('#default-sample-text-size').wrapInner('<a href="#" />');
 
 
 		farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
@@ -119,5 +120,10 @@ var slider;
 			e.preventDefault();
 		});
 
+		//click event handler for Default sample text size link
+		$('#default-sample-text-size a').click( function(e) {
+			$('#sample-text-size').val(this.innerHTML);
+			e.preventDefault();
+		});
 	});
 })(jQuery);
