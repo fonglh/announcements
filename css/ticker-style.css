@@ -9,9 +9,12 @@
 	-moz-border-radius: 15px;
 	border-radius: 15px;
 	background-color: #21759B;
+	/* Makes child elements using absolute positioning be relative from this div*/
+	position: relative;
 }
 .ticker {
-	width: 85%;
+	/* Give space on the right for the controls */
+	padding-right: 64px;
 	height: 90%;
 	display: block;
 	position: relative;
@@ -64,11 +67,14 @@
 	display: block;
 }
 .ticker-controls {
-	padding: 8px 0px 0px 0px;
-	margin: 0px 0px 0px 0px;
-	margin-left: 1em;
+	padding: 5px 0px 0px 0px;
+	margin: 8px 10px 0px 1em;
 	list-style-type: none;
-	float: left;
+	/* assign a fixed width for the controls and fix their position */
+	width: 64px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
 }
 .ticker-controls li {
 	padding: 0px;
