@@ -1,5 +1,6 @@
 var farbtastic;
 var farbtastic2;
+var slider;
 
 (function($){
 	// change the colour of the sample square and change the colour picker's selected colour for ticker color
@@ -27,6 +28,9 @@ var farbtastic2;
 	}
 
 	$(document).ready( function() {
+		slider = document.querySelector( '#expt' );
+		slider.dataset.value = slider.value;
+
 		//turn the default colour <span> below the textbox into a link
 		$('#ticker-default-color').wrapInner('<a href="#" />');
 		$('#text-default-color').wrapInner('<a href="#" />');
@@ -87,6 +91,11 @@ var farbtastic2;
 			if ( a.match(/^[0-9]+$/) ) {
 				tickerChangeHeight( a + 'px' );
 			}
+		});
+
+		$('#expt').change( function() {
+			slider.dataset.value = $('#expt').val();
+			tickerChangeHeight( $('#expt').val() + 'px' );
 		});
 
 

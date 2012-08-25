@@ -15,3 +15,9 @@
 	margin: 0 7px 0 3px;
 	padding: 4px 14px;
 }
+
+#expt::after {
+	content: attr(data-value) '/' attr(max);
+	position: relative;
+	left: 135px; top: -20px;
+}

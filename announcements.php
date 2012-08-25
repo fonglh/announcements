@@ -396,8 +396,11 @@ function flh_announcements_options_field_max_chars() {
 }
 
 function flh_announcements_options_field_slider() {
+	$options = flh_announcements_get_options();
+	$ticker_height = $options['ticker-height'];
+	$ticker_height = substr( $ticker_height, 0, -2 );
 	?>
-	<input type="range" name="flh_announcements_options[expt]" id="expt" value="25" min="0" max="100" />
+	<input type="range" name="flh_announcements_options[expt]" id="expt" value="<?php echo esc_attr( $ticker_height ); ?>" min="23" max="200" />
 	<?php
 }
 
