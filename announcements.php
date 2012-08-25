@@ -344,7 +344,7 @@ function flh_announcements_options_init() {
 function flh_announcements_appearance_section() {
 	?>
 	<p>Control what your ticker will look like. Changes here can be immediately previewed in the sample ticker.</p>
-	<p>Save the changes to see them take effect on your site</p>
+	<p>Save the changes to see them take effect on your site.</p>
 	<?php
 	
 }
@@ -353,7 +353,7 @@ function flh_announcements_appearance_section() {
  */
 function flh_announcements_behavior_section() {
 	?>
-	<p>Control elements of the ticker's behavior here. Save the changes to see them take effect</p>
+	<p>Control elements of the ticker's behavior here. Save the changes to see them take effect.</p>
 	<?php
 }
 
