@@ -1,7 +1,7 @@
 === Announcements Ticker ===
 Contributors: fonglh
 Tags: ticker, jquery, announcements, shortcode
-Requires at least: 2.7
+Requires at least: 3.0
 Tested up to: 3.4.1
 Stable tag: trunk 
 License: GPLv2 or later
@@ -12,6 +12,7 @@ Provides a shortcode and custom post type to display announcements using a jQuer
 
 Easily create an announcements news ticker on your website. Put up new announcements just like how you would put up a blog post. Use the [announcements] shortcode to display all your announcements in a page or post.
 
+Customize the look of your ticker from the WordPress administration screens. An options page allows you to change the colours and size.
 
 == Installation ==
 

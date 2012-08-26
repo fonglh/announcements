@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Announcements
-Plugin URI: http://example.com/wordpress-plugins/my-plugin
-Description: Provides a custom post type for easy administration of announcements. Displays announcements using a jQuery news ticker. Shortcode allows them to be easily added to page or post content
-Version: 1.0
+Plugin Name: Announcements Ticker
+Plugin URI: http://wpadventures.wordpress.com/plugins/announcements-ticker/ 
+Description: Provides a custom post type for easy administration of announcements. Displays announcements using a jQuery news ticker. Shortcode allows them to be easily added to page or post content.
+Version: 0.1
 Author: fonglh
 Author URI: https://wpadventures.wordpress.com
 License: GPLv2
