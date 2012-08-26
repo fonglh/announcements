@@ -57,6 +57,6 @@ All the ranges can be filtered with WordPress filters. Add the code into your th
 
 == Changelog ==
 
-= 1.0 =
+= 0.1 =
 * (26 Aug 2012) First Release.
 
