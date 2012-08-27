@@ -3,7 +3,7 @@ Contributors: fonglh
 Tags: ticker, jquery, announcements, shortcode
 Requires at least: 3.0
 Tested up to: 3.4.1
-Stable tag: 0.1 
+Stable tag: 0.2 
 License: GPLv2 or later
 
 Provides a shortcode and custom post type to display announcements using a jQuery news ticker.
@@ -56,6 +56,9 @@ All the ranges can be filtered with WordPress filters. Add the code into your th
 2. Options page with dynamic ticker preview
 
 == Changelog ==
+
+= 0.2 =
+* (27 Aug 2012) Changed hardcoded development name used in the folder paths to the actual plugin name of announcements-ticker. Also renamed the main plugin file.
 
 = 0.1 =
 * (26 Aug 2012) First Release.
