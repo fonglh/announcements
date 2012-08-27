@@ -9,7 +9,7 @@ Author URI: https://wpadventures.wordpress.com
 License: GPLv2
 */
 
-register_activation_hook( WP_PLUGIN_DIR . '/announcements/announcements.php', 'flh_announcements_install' );
+register_activation_hook( WP_PLUGIN_DIR . '/announcements-ticker/announcements-ticker.php', 'flh_announcements_install' );
 
 /* Start by giving the administrator role access to the CPT
  */
@@ -32,7 +32,7 @@ function flh_announcements_install() {
 
 }
 
-register_deactivation_hook( WP_PLUGIN_DIR . '/announcements/announcements.php', 'flh_announcements_deactivate' );
+register_deactivation_hook( WP_PLUGIN_DIR . '/announcements-ticker/announcements-ticker.php', 'flh_announcements_deactivate' );
 
 /* Remove custom capabilities when plugin is deactivated
  *
@@ -186,17 +186,17 @@ add_action( 'wp_enqueue_scripts', 'flh_announcements_ticker_enqueue' );
 function flh_announcements_ticker_enqueue() {
 	wp_enqueue_script(
 			'news-ticker',
-			plugins_url( 'announcements/js/jquery.ticker.js' ),		//passing __FILE__ as the 2nd param doesn't work for symlinks
+			plugins_url( 'announcements-ticker/js/jquery.ticker.js' ),		//passing __FILE__ as the 2nd param doesn't work for symlinks
 			array( 'jquery' )
 		);
 	wp_enqueue_script(
 			'start-news-ticker',
-			plugins_url( 'announcements/js/ticker-init.js' ),
+			plugins_url( 'announcements-ticker/js/ticker-init.js' ),
 			array( 'news-ticker' )
 		);
 	wp_enqueue_style(
 			'news-ticker-style',
-			plugins_url( 'announcements/css/ticker-style.css' )
+			plugins_url( 'announcements-ticker/css/ticker-style.css' )
 		);
 }
 
@@ -208,14 +208,14 @@ function flh_announcements_admin_enqueue() {
 	//also makes the sliders and all the other dynamic stuff work
 	wp_enqueue_script(
 			'flh-announcements-options',
-			plugins_url( 'announcements/js/announcements-options.js' ),
+			plugins_url( 'announcements-ticker/js/announcements-options.js' ),
 			array( 'farbtastic' )
 		);
 
 	// this is for the colour samples and slider text
 	wp_enqueue_style(
 			'flh-announcements-options-style',
-			plugins_url( 'announcements/css/announcements-options.css' ),	
+			plugins_url( 'announcements-ticker/css/announcements-options.css' ),	
 			false
 		);
 
@@ -225,7 +225,7 @@ function flh_announcements_admin_enqueue() {
 	//to display the sample ticker
 	wp_enqueue_style(
 			'news-ticker-style',
-			plugins_url( 'announcements/css/ticker-style.css' )
+			plugins_url( 'announcements-ticker/css/ticker-style.css' )
 		);
 }
 
