@@ -2,7 +2,7 @@
 Contributors: fonglh
 Tags: ticker, jquery, announcements, shortcode
 Requires at least: 3.0
-Tested up to: 3.4.1
+Tested up to: 3.4.2
 Stable tag: 0.2 
 License: GPLv2 or later
 
@@ -56,6 +56,10 @@ All the ranges can be filtered with WordPress filters. Add the code into your th
 2. Options page with dynamic ticker preview
 
 == Changelog ==
+
+= 0.3 =
+* (27 Nov 2012) Changed query so it no longer looks for future posts. Post dates greater than now will show up in the ticker.
+* Added filter so announcement custom post types will have the post status of future changed to publish when created or updated. This allows non admin users to see the full text after clicking on the Read All link.
 
 = 0.2 =
 * (27 Aug 2012) Changed hardcoded development name used in the folder paths to the actual plugin name of announcements-ticker. Also renamed the main plugin file.
