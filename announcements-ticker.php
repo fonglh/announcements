@@ -101,7 +101,7 @@ function flh_announcements_handler() {
 	//it's not enough to just get post_status=future as missed schedule posts will also show up
 	add_filter( 'posts_where', 'flh_announcements_filter_where' );
 	$announce_query = new WP_Query( array( 'post_type' => 'announcement',
-											'post_status' => 'future',  
+											//'post_status' => 'future',  
 											'orderby' => 'date',
 											'order' => 'ASC'
 								) );
@@ -178,6 +178,19 @@ function flh_announcements_filter_where( $where = '' ) {
 	$where .= " AND post_date >= '" . date( 'Y-m-d H:i:s' ) . "'";
 
 	return $where;
+}
+
+//add filter to change post_status for announcement post type
+add_filter( 'wp_insert_post_data', 'flh_announcements_insert_post_data', 10, 2 );
+
+//filter function to change post_status from 'future' to 'publish'
+//this allows the Read All link to work without throwing a 404
+function flh_announcements_insert_post_data( $data, $postarr ) {
+	//if this is a scheduled announcement
+	if( $data[ 'post_type' ] == 'announcement' && $data[ 'post_status' ] == 'future' ) {
+		$data[ 'post_status' ] = 'publish';
+	}
+	return $data;
 }
 
 //enqueue scripts and styles for news ticker
