@@ -222,7 +222,7 @@ function flh_announcements_admin_enqueue() {
 	wp_enqueue_script(
 			'flh-announcements-options',
 			plugins_url( 'announcements-ticker/js/announcements-options.js' ),
-			array( 'farbtastic', 'wp-color-picker' )
+			array( 'wp-color-picker' )
 		);
 
 	// this is for the colour samples and slider text
@@ -233,7 +233,6 @@ function flh_announcements_admin_enqueue() {
 		);
 
 	//need this to display the colour picker
-	wp_enqueue_style( 'farbtastic' );
 	wp_enqueue_style( 'wp-color-picker' );
 
 	//to display the sample ticker
