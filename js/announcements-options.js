@@ -1,5 +1,4 @@
 //handles for the colour pickers
-//var farbtastic;
 var farbtastic2;
 
 //handles for the sliders
@@ -7,14 +6,11 @@ var heightSlider;
 var sizeSlider;
 
 (function($){
-	// change the colour of the sample square and change the colour picker's selected colour for ticker color
-	var tickerPickColor = function(a) {
-		farbtastic.setColor(a);
-		$('#ticker-color').val(a);
-		$('#ticker-color-example').css('background-color', a);
-		$('#ticker-wrapper-sample').css('background-color', a);
-		$('#ticker-sample').css('background-color', a);
-		$('#ticker-content-sample').css('background-color', a);
+	// change the color picker's selected color for ticker color
+	function tickerPickColor(color) {
+		$('#ticker-wrapper-sample').css('background-color', color);
+		$('#ticker-sample').css('background-color', color);
+		$('#ticker-content-sample').css('background-color', color);
 	};
 
 	// change the colour of the sample square and change the colour picker's selected colour for text color
@@ -48,54 +44,29 @@ var sizeSlider;
 		sizeSlider.dataset.value = sizeSlider.value;
 
 		//turn the default colour <span> below the textbox into a link
-		$('#ticker-default-color').wrapInner('<a href="#" />');
 		$('#text-default-color').wrapInner('<a href="#" />');
 		$('#default-height').wrapInner('<a href="#" />');
 		$('#default-max-chars').wrapInner('<a href="#" />');
 		$('#default-text-size').wrapInner('<a href="#" />');
 
 
-		//farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
 		farbtastic2 = $.farbtastic('#textColorPickerDiv', textPickColor);
 		$('#ticker-color').wpColorPicker({
 			change: function( event, ui ) {
-				$('#ticker-wrapper-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
-				$('#ticker-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
-				$('#ticker-content-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+				tickerPickColor( $('#ticker-color').wpColorPicker('color') );
 			}
 		});
 
 		//initialise colour picker and sample square values
-//		tickerPickColor( $('#ticker-color').val() );
-		$('#ticker-wrapper-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
-		$('#ticker-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
-		$('#ticker-content-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+		tickerPickColor( $('#ticker-color').wpColorPicker('color') );
 		textPickColor( $('#text-color').val() );
 		tickerChangeHeight( $('#ticker-height').val() );
-
-		//show colour picker when sample colour square or button is clicked for ticker
-		/*$('.tickerpickcolor').click( function(e) {
-			$('#tickerColorPickerDiv').show();
-			e.preventDefault();
-		});*/
 
 		//show colour picker when sample colour square or button is clicked for text
 		$('.textpickcolor').click( function(e) {
 			$('#textColorPickerDiv').show();
 			e.preventDefault();
 		});
-
-		//call *pickColor functions to change the sample square and selected colour
-		/*$('#ticker-color').keyup( function() {
-			var a = $('#ticker-color').val(),
-				b = a;
-
-			a = a.replace(/[^a-fA-F0-9]/, '');
-			if ( '#' + a !== b )
-				$('#ticker-color').val(a);
-			if ( a.length === 3 || a.length === 6 )
-				tickerPickColor( '#' + a );
-		});*/
 
 		$('#text-color').keyup( function() {
 			var a = $('#text-color').val(),
@@ -124,11 +95,6 @@ var sizeSlider;
 			$('#textColorPickerDiv').hide();
 		});
 
-		//click event handler for the Default colour links
-		/*$('#ticker-default-color a').click( function(e) {
-			tickerPickColor( '#' + this.innerHTML.replace(/[^a-fA-F0-9]/, '') );
-			e.preventDefault();
-		});*/
 		$('#text-default-color a').click( function(e) {
 			textPickColor( '#' + this.innerHTML.replace(/[^a-fA-F0-9]/, '') );
 			e.preventDefault();
