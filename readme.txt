@@ -3,7 +3,7 @@ Contributors: fonglh
 Tags: ticker, jquery, announcements, shortcode
 Requires at least: 3.0
 Tested up to: 3.4.2
-Stable tag: 0.2 
+Stable tag: 0.3 
 License: GPLv2 or later
 
 Provides a shortcode and custom post type to display announcements using a jQuery news ticker.
@@ -48,7 +48,7 @@ Maximum text size: 32px
 
 = I don't like your ranges, they're not suitable for my site. =
 
-All the ranges can be filtered with WordPress filters. Add the code into your theme's functions.php to modify the values. Take a look from line 314 of announcements.php to find the filter hooks.
+All the ranges can be filtered with WordPress filters. Add the code into your theme's functions.php to modify the values. Take a look from line 328 of announcements-ticker.php to find the filter hooks.
 
 == Screenshots ==
 
@@ -56,6 +56,9 @@ All the ranges can be filtered with WordPress filters. Add the code into your th
 2. Options page with dynamic ticker preview
 
 == Changelog ==
+
+= 0.4 =
+* (7 Dec 2012) Changed color pickers from farbtastic to the new Iris color picker used in WordPress 3.5.
 
 = 0.3 =
 * (27 Nov 2012) Changed query so it no longer looks for future posts. Post dates greater than now will show up in the ticker.
