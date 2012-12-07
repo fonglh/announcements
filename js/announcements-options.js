@@ -1,5 +1,5 @@
 //handles for the colour pickers
-var farbtastic;
+//var farbtastic;
 var farbtastic2;
 
 //handles for the sliders
@@ -55,19 +55,29 @@ var sizeSlider;
 		$('#default-text-size').wrapInner('<a href="#" />');
 
 
-		farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
+		//farbtastic = $.farbtastic('#tickerColorPickerDiv', tickerPickColor);
 		farbtastic2 = $.farbtastic('#textColorPickerDiv', textPickColor);
+		$('#ticker-color').wpColorPicker({
+			change: function( event, ui ) {
+				$('#ticker-wrapper-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+				$('#ticker-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+				$('#ticker-content-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+			}
+		});
 
 		//initialise colour picker and sample square values
-		tickerPickColor( $('#ticker-color').val() );
+//		tickerPickColor( $('#ticker-color').val() );
+		$('#ticker-wrapper-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+		$('#ticker-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
+		$('#ticker-content-sample').css('background-color', $('#ticker-color').wpColorPicker('color'));
 		textPickColor( $('#text-color').val() );
 		tickerChangeHeight( $('#ticker-height').val() );
 
 		//show colour picker when sample colour square or button is clicked for ticker
-		$('.tickerpickcolor').click( function(e) {
+		/*$('.tickerpickcolor').click( function(e) {
 			$('#tickerColorPickerDiv').show();
 			e.preventDefault();
-		});
+		});*/
 
 		//show colour picker when sample colour square or button is clicked for text
 		$('.textpickcolor').click( function(e) {
@@ -76,7 +86,7 @@ var sizeSlider;
 		});
 
 		//call *pickColor functions to change the sample square and selected colour
-		$('#ticker-color').keyup( function() {
+		/*$('#ticker-color').keyup( function() {
 			var a = $('#ticker-color').val(),
 				b = a;
 
@@ -85,7 +95,7 @@ var sizeSlider;
 				$('#ticker-color').val(a);
 			if ( a.length === 3 || a.length === 6 )
 				tickerPickColor( '#' + a );
-		});
+		});*/
 
 		$('#text-color').keyup( function() {
 			var a = $('#text-color').val(),
@@ -115,10 +125,10 @@ var sizeSlider;
 		});
 
 		//click event handler for the Default colour links
-		$('#ticker-default-color a').click( function(e) {
+		/*$('#ticker-default-color a').click( function(e) {
 			tickerPickColor( '#' + this.innerHTML.replace(/[^a-fA-F0-9]/, '') );
 			e.preventDefault();
-		});
+		});*/
 		$('#text-default-color a').click( function(e) {
 			textPickColor( '#' + this.innerHTML.replace(/[^a-fA-F0-9]/, '') );
 			e.preventDefault();

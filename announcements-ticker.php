@@ -222,7 +222,7 @@ function flh_announcements_admin_enqueue() {
 	wp_enqueue_script(
 			'flh-announcements-options',
 			plugins_url( 'announcements-ticker/js/announcements-options.js' ),
-			array( 'farbtastic' )
+			array( 'farbtastic', 'wp-color-picker' )
 		);
 
 	// this is for the colour samples and slider text
@@ -234,6 +234,7 @@ function flh_announcements_admin_enqueue() {
 
 	//need this to display the colour picker
 	wp_enqueue_style( 'farbtastic' );
+	wp_enqueue_style( 'wp-color-picker' );
 
 	//to display the sample ticker
 	wp_enqueue_style(
@@ -374,6 +375,7 @@ function flh_announcements_options_init() {
 
 	// Ticker Behavior Settings
 	add_settings_field( 'max-chars', 'Maximum number of characters', 'flh_announcements_options_field_max_chars', 'announcements_options', 'ticker-behavior-section' );
+
 }
 
 /* Callback for Ticker Appearance section
@@ -450,7 +452,8 @@ function flh_announcements_validate_options( $input ) {
 
 /* Callback function to display colour picker for the ticker background
  *
- * Code was adapted from twentyeleven theme's link colour picker.
+ * Code used to be adapted from twentyeleven theme's link colour picker, until WP 3.5's colour picker came out
+ * http://make.wordpress.org/core/2012/11/30/new-color-picker-in-wp-3-5/
  * Setting name is taken from the part in [] in the name attributes. That's the array key value that goes 
  * to the validation function.
  */
@@ -458,14 +461,8 @@ function flh_announcements_options_field_ticker_color() {
 	$defaults = flh_announcements_get_default_options();
 	$options = flh_announcements_get_options();
 	?>
-	<input type="text" name="flh_announcements_options[ticker-color]" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" />
-	<a href="#" class="tickerpickcolor hide-if-no-js" id="ticker-color-example"></a>
-	<input type="button" class="tickerpickcolor button hide-if-no-js" id="ticker-pick-color" value="Select a Color" />
-	<div id="tickerColorPickerDiv" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div>
-	<br />
-	<span><?php printf( __( 'Default color: %s', 'flh_announcements' ), '<span id="ticker-default-color">' . $defaults['ticker-color'] . '</span>' ); ?></span>
+	<input type="text" name="flh_announcements_options[ticker-color]" id="ticker-color" value="<?php echo esc_attr( $options['ticker-color'] ); ?>" data-default-color="<?php echo esc_attr( $defaults['ticker-color'] ); ?>" />
 	<?php
-
 }
 
 /* Callback function to display colour picker for the ticker text
@@ -566,4 +563,5 @@ function flh_announcements_print_ticker_color_style() {
 	</style>
 	<?php
 }
+
 
