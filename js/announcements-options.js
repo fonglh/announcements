@@ -1,26 +1,20 @@
-//handles for the colour pickers
-var farbtastic2;
-
 //handles for the sliders
 var heightSlider;
 var sizeSlider;
 
 (function($){
-	// change the color picker's selected color for ticker color
+	// change the sample ticker color
 	function tickerPickColor(color) {
 		$('#ticker-wrapper-sample').css('background-color', color);
 		$('#ticker-sample').css('background-color', color);
 		$('#ticker-content-sample').css('background-color', color);
 	};
 
-	// change the colour of the sample square and change the colour picker's selected colour for text color
-	var textPickColor = function(a) {
-		farbtastic2.setColor(a);
-		$('#text-color').val(a);
-		$('#text-color-example').css('background-color', a);
-		$('#ticker-content-sample').css('color', a);
-		$('#ticker-content-sample a').css('color', a);
-	};
+	// change the sample ticker text color
+	function textPickColor(color) {
+		$('#ticker-content-sample').css('color', color);
+		$('#ticker-content-sample a').css('color', color);
+	}
 
 	//change the height of the sample ticker
 	var tickerChangeHeight = function(a) {
@@ -43,42 +37,32 @@ var sizeSlider;
 		sizeSlider = document.querySelector( '#text-size' );
 		sizeSlider.dataset.value = sizeSlider.value;
 
-		//turn the default colour <span> below the textbox into a link
-		$('#text-default-color').wrapInner('<a href="#" />');
+		//turn the default <span> below the textbox into a link
+		$('#default-text-size').wrapInner('<a href="#" />');
 		$('#default-height').wrapInner('<a href="#" />');
 		$('#default-max-chars').wrapInner('<a href="#" />');
-		$('#default-text-size').wrapInner('<a href="#" />');
 
 
-		farbtastic2 = $.farbtastic('#textColorPickerDiv', textPickColor);
+		// initialise color pickers and pass in an optional callback function to change the sample ticker colors
 		$('#ticker-color').wpColorPicker({
 			change: function( event, ui ) {
 				tickerPickColor( $('#ticker-color').wpColorPicker('color') );
 			}
 		});
 
-		//initialise colour picker and sample square values
+		$('#text-color').wpColorPicker({
+			change: function( event, ui ) {
+				textPickColor( $('#text-color').wpColorPicker('color') );
+			}
+		});
+
+		//initialise sample ticker color and height values
 		tickerPickColor( $('#ticker-color').wpColorPicker('color') );
-		textPickColor( $('#text-color').val() );
+		textPickColor( $('#text-color').wpColorPicker('color') );
 		tickerChangeHeight( $('#ticker-height').val() );
 
-		//show colour picker when sample colour square or button is clicked for text
-		$('.textpickcolor').click( function(e) {
-			$('#textColorPickerDiv').show();
-			e.preventDefault();
-		});
-
-		$('#text-color').keyup( function() {
-			var a = $('#text-color').val(),
-				b = a;
-
-			a = a.replace(/[^a-fA-F0-9]/, '');
-			if ( '#' + a !== b )
-				$('#text-color').val(a);
-			if ( a.length === 3 || a.length === 6 )
-				textPickColor( '#' + a );
-		});
-
+	
+		//update sample ticker height and font size when the sliders are changed
 		$('#ticker-height').change( function() {
 			heightSlider.dataset.value = $('#ticker-height').val();
 			tickerChangeHeight( $('#ticker-height').val() + 'px' );
@@ -89,14 +73,11 @@ var sizeSlider;
 			tickerChangeSize( $('#text-size').val() + 'px' );
 		});
 
-		//hide colour pickers when click is outside of them
-		$(document).mousedown( function() {
-			$('#tickerColorPickerDiv').hide();
-			$('#textColorPickerDiv').hide();
-		});
-
-		$('#text-default-color a').click( function(e) {
-			textPickColor( '#' + this.innerHTML.replace(/[^a-fA-F0-9]/, '') );
+		//click event handler for Default sample text size link
+		$('#default-text-size a').click( function(e) {
+			$('#text-size').val(this.innerHTML.slice(0, -2) );
+			sizeSlider.dataset.value = $('#text-size').val();
+			tickerChangeSize( this.innerHTML );
 			e.preventDefault();
 		});
 
@@ -114,12 +95,5 @@ var sizeSlider;
 			e.preventDefault();
 		});
 
-		//click event handler for Default sample text size link
-		$('#default-text-size a').click( function(e) {
-			$('#text-size').val(this.innerHTML.slice(0, -2) );
-			sizeSlider.dataset.value = $('#text-size').val();
-			tickerChangeSize( this.innerHTML );
-			e.preventDefault();
-		});
 	});
 })(jQuery);
